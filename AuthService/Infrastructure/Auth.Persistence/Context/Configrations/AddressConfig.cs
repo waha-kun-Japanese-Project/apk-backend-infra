@@ -1,0 +1,27 @@
+﻿using Auth.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Auth.Persistence.Context.Configrations
+{
+    public class AddressConfig : IEntityTypeConfiguration<Address>
+
+    {
+        public void Configure(EntityTypeBuilder<Address> builder)
+        {
+          
+                
+            builder.Property(x=> x.Region)
+                .IsRequired()
+                .HasMaxLength(100);
+            builder.Property(x => x.Village)
+                .IsRequired()
+                .HasMaxLength(100);
+        }
+    }
+}

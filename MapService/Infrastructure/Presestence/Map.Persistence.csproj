@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Context\Configraions\" />
+    <Folder Include="DbIntiliazer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CommanLib\CommanLib\CommanLib.csproj" />
+    <ProjectReference Include="..\..\..\IssueService\Core\Issue.Domain\Issue.Domain.csproj" />
+    <ProjectReference Include="..\..\..\IssueService\Infrastructure\Issue.Persistance\Issue.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\ServiceAbsraction\Map.ServiceAbsraction.csproj" />
+  </ItemGroup>
+
+</Project>

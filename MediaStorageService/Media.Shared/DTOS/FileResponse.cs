@@ -1,0 +1,12 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Media.Shared.DTOS
+{
+    public  record FileResponse(string fileName, string filePath, string fileUrl, long? Size, string? ContentType)
+    {
+    }
+}
