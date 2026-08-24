@@ -1,8 +1,7 @@
-using Minio;
 using Media.Service;
 using Media.ServiceAbstraction;
 using Media.Settings;
-using Microsoft.Extensions.Configuration;
+using Minio;
 using Microsoft.Extensions.Options;
 
 namespace MediaStorageService
@@ -13,14 +12,14 @@ namespace MediaStorageService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHealthChecks();
 
             builder.Services.Configure<MinioSettings>(
                 builder.Configuration.GetSection("MinioSettings"));
+
             builder.Services.AddSingleton<IMinioClient>(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
@@ -28,7 +27,7 @@ namespace MediaStorageService
                 var client = new MinioClient()
                     .WithEndpoint(settings.Endpoint)
                     .WithCredentials(settings.AccessKey, settings.SecretKey)
-                    .WithRegion("us-east-1");   // added — fixes AccessDenied caused by missing region in signature
+                    .WithRegion("us-east-1");
 
                 if (settings.UseSSL)
                 {
@@ -37,20 +36,18 @@ namespace MediaStorageService
 
                 return client.Build();
             });
+
             builder.Services.AddScoped<IStorageService, MinioStorageService>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
             app.UseAuthorization();
 
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             app.Run();

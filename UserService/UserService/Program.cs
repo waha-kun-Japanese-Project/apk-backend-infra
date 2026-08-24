@@ -10,34 +10,26 @@ namespace Userservices
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddHealthChecks();
             builder.Services.AddPersistenceServices(builder.Configuration);
-            // CHANGED: was AddUserServices() with no args - now needs
-            // IConfiguration so RabbitMq:Host/Port/Username/Password are
-            // actually read instead of hardcoded.
             builder.Services.AddUserServices(builder.Configuration);
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddTokenService(builder.Configuration);
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             app.Run();

@@ -12,17 +12,9 @@ namespace ReportService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddPersistenceServices(builder.Configuration);
-            builder.Services.AddTokenService(builder.Configuration);
-            builder.Services.AddReportClient(builder.Configuration);
-            builder.Services.AddReportService(builder.Configuration);
-            builder.Services.AddHttpContextAccessor();
+
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -42,37 +34,38 @@ namespace ReportService
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
+            builder.Services.AddHealthChecks();
+            builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddTokenService(builder.Configuration);
+            builder.Services.AddReportClient(builder.Configuration);
+            builder.Services.AddReportService(builder.Configuration);
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
-
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             app.Run();
