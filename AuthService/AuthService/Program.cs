@@ -40,7 +40,10 @@ namespace Auth_Services
             //{
             //    Credential = GoogleCredential.FromFile("F:\\Graduation_Project\\AuthService\\AuthService\\Firebase\\firebase-adminsdk.json")
             //});
-            builder.Services.AddServices();
+            // CHANGED: was AddServices() with no args - ServiceExtensions.AddServices
+            // now needs IConfiguration to read RabbitMq:Host/Port/Username/Password
+            // instead of hardcoding "localhost"/"guest"/"guest".
+            builder.Services.AddServices(builder.Configuration);
             //builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSetting"));
 
             //builder.Services.AddTokenService(builder.Configuration);

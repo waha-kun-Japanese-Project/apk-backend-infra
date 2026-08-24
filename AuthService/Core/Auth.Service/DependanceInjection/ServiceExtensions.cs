@@ -17,7 +17,12 @@ namespace Auth.Service.DependanceInjection
 {
     public static  class ServiceExtensions
     {
-        public static IServiceCollection AddServices(this IServiceCollection services )
+        // CHANGED: now takes IConfiguration so RabbitMQ host/user/pass come
+        // from appsettings.json / env vars instead of being hardcoded to
+        // "localhost"/"guest"/"guest" - previously this meant the service
+        // could never actually reach RabbitMQ once deployed anywhere other
+        // than a developer's own machine.
+        public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOTPService, OtpService>();
@@ -25,17 +30,20 @@ namespace Auth.Service.DependanceInjection
             //services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IFireBaseService, FireBaseService>();
-            services.AddMassTransit(x=>x.UsingRabbitMq((context, cfg) =>
+
+            services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                var host = configuration["RabbitMq:Host"] ?? "localhost";
+                var port = configuration.GetValue<ushort?>("RabbitMq:Port") ?? 5672;
+                var username = configuration["RabbitMq:Username"] ?? "guest";
+                var password = configuration["RabbitMq:Password"] ?? "guest";
+
+                cfg.Host(host, port, "/", h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(username);
+                    h.Password(password);
                 });
             }));
-
-
-
 
             return services;
         }
