@@ -7,6 +7,7 @@ using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
+using ReportService.Middleware;
 
 namespace ReportService
 {
@@ -61,6 +62,8 @@ namespace ReportService
             builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             using (var scope = app.Services.CreateScope())
             {

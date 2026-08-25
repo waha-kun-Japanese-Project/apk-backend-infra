@@ -13,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Report.Service.Exceptions;
 
 namespace Report.Service.Services
 {
@@ -31,7 +32,7 @@ namespace Report.Service.Services
                 throw new InvalidOperationException("This report has no photo to analyze.");
             }
 
-        
+
             await using var photoStream = await storageClient.DownloadAsync(photoAttachment.Url);
 
             var fileName = photoAttachment.Url.Split('/').LastOrDefault() ?? "photo.jpg";
@@ -39,7 +40,7 @@ namespace Report.Service.Services
 
             if (prediction.Status != "success")
             {
-                throw new InvalidOperationException(
+                throw new PhotoRejectedException(
                     prediction.Message ?? "The vision service couldn't produce a confident diagnosis for this photo.");
             }
 
@@ -74,7 +75,7 @@ namespace Report.Service.Services
                 Description = request.Description,
                 ReporterId = reporterId,
             };
-            if (request.Longitude is not null && request.Latitude is not null )
+            if (request.Longitude is not null && request.Latitude is not null)
             {
                 report.Location = new GPSLocation
                 {
@@ -100,7 +101,7 @@ namespace Report.Service.Services
 
             await unitOfWork.ReportRepo.AddAsync(report);
             await unitOfWork.SaveChangesAsync(cancellationToken);
-          return  mapper.Map<CreateReportResponse>(report);
+            return mapper.Map<CreateReportResponse>(report);
 
 
         }
@@ -122,7 +123,7 @@ namespace Report.Service.Services
 
         public async Task<IEnumerable<ReportDetailsResponse>> GetAllReportsAsync(CancellationToken cancellationToken = default)
         {
-         var reports = await unitOfWork.ReportRepo.GetAllAsync();
+            var reports = await unitOfWork.ReportRepo.GetAllAsync();
             var response = mapper.Map<IEnumerable<ReportDetailsResponse>>(reports);
             return response;
 
