@@ -14,8 +14,8 @@ namespace Report.Shared.DTOS.Report
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     Guid ReporterId,
-    double? Latitude,
-    double? Longitude,
+    string? Latitude,
+    string? Longitude,
     List<ReportAttachmentResponse> Attachments,
     AiAnalysisResponse? Analysis
      )
