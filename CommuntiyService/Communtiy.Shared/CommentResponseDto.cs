@@ -13,7 +13,8 @@ namespace Communtiy.Shared
         public Guid UserId { get; set; }
         public string Text { get; set; } = null!;
         public string VoiceUrl { get; set; } = null!;
-
+        public int Descreption  { get; set; }
+        public  string url { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

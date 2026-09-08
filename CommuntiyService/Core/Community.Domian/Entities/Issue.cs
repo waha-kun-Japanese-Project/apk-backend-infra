@@ -13,6 +13,7 @@ namespace Community.Domain.Entities
         public string Type { get; set; } = string.Empty; // e.g. "leak", "distribution_problem"
         public Guid ReporterId { get; set; } // user who reported the issue
         public Guid? AssignedExpertId { get; set; } // expert assigned to the issue
+        public ICollection<IssueAttachment> Attachment { get; set; }
 
         public Guid ReportId { get; set; }
 

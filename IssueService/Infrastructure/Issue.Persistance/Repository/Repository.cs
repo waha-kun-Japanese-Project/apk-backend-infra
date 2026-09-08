@@ -30,6 +30,10 @@ namespace Issue.Persistence.Repository
             return await issueDbContext.Set<TEntity>().GetQuery(specification).FirstOrDefaultAsync(cancellationToken);
 
         }
+        //public async Task<TEntity?> GetIssuesCount(ISpecification<TEntity>  specification, CancellationToken cancellationToken = default)
+        //{
+        //    return await issueDbContext.Set<TEntity>().GetQuery(specification).CountAsync(, cancellationToken);
+        //}
 
         public void Remove(TEntity entity)
             => issueDbContext.Set<TEntity>().Remove(entity);
@@ -37,6 +41,10 @@ namespace Issue.Persistence.Repository
 
         public void Update(TEntity entity) 
             => issueDbContext.Set<TEntity>().Update(entity);
+        public async Task<int> CountAsync(ISpecification<TEntity> spec, CancellationToken ct = default)
+        {
+            return await issueDbContext.Set<TEntity>().GetQuery(spec).CountAsync(ct);
+        }
 
     }
 }

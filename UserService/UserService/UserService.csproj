@@ -19,6 +19,9 @@
     <ProjectReference Include="..\Infrastructure\User.Persistence\User.Persistence.csproj" />
     <ProjectReference Include="..\Infrastructure\User.Presentation API\User.Presentation API.csproj" />
   </ItemGroup>
+	<!--<ItemGroup>
+		<Protobuf Include="Protos\user.proto" GrpcServices="Server" />
+	</ItemGroup>-->
 
   <ItemGroup>
     <Folder Include="Controllers\" />

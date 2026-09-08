@@ -80,10 +80,9 @@ namespace Community.Service
                 });
         }
 
-        public async Task GetCommentCurrentCount(Guid issueId)
+        public async Task<int> GetCommentCurrentCount(Guid issueId)
         {
-            var count = await CountService.GetCommentCountAsync(issueId);
-            await Clients.All.SendAsync("ReceiveCommentCount", issueId);
+            return(int)await CountService.GetCommentCountAsync(issueId);
         }
         public async Task ShareIssue(CommunityRequestDto RequestDto)
         {
@@ -109,7 +108,7 @@ namespace Community.Service
         public async Task GetCurrentShareCount(Guid issueId)
         {
             var count = await CountService.GetShareCountAsync(issueId);
-            await Clients.All.SendAsync("ReceiveShareCount", issueId, count);
+            await Clients.Group(issueId.ToString()).SendAsync("ReceiveShareCount", issueId, count);
         }
         public async Task VoteIssue(CommunityRequestDto RequestDto)
         {
