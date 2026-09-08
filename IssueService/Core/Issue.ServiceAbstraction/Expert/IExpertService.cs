@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Issue.Shared.DTOS;
 
-namespace Issue.ServiceAbstraction
+namespace Issue.ServiceAbstraction.Expert
 {
     public  interface IExpertService
     {

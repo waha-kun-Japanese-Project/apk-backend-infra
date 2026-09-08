@@ -10,8 +10,9 @@ namespace Issue.Client.ServiceAbstraction
 {
     public  interface IUserService
     {
-        
-        [Get("/api/User/GetUser/{userid}")]
-         Task<UserDetailsResponse> GetUserDetails(Guid userid);
+        [Get("/api/User/expert-details")]
+
+        Task<IEnumerable<ExpertDetailsResponse>> GetExpertIdsAsync();
+
     }
 }

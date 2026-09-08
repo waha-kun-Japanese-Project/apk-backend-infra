@@ -13,6 +13,11 @@ namespace Issue.Persistence.Repository
     {
         private readonly Dictionary<string, object> repositories = [];
 
+        public Task<TResult> ExecuteInSerializableTransactionAsync<TResult>(Func<CancellationToken, Task<TResult>> operation, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public IRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : BaseEntity<TKey>
         {
             var type = typeof(TEntity).Name;
@@ -26,5 +31,7 @@ namespace Issue.Persistence.Repository
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
        => await dbContext.SaveChangesAsync(cancellationToken);
+
+
     }
 }

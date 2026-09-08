@@ -11,7 +11,7 @@ namespace User.ServicesAbstract
     public interface IUserService
     {
         Task<UserDetailsResponse> GetUserDetailsAsync();
-        Task <UserDetailsResponse> GetUserDetailsAsync(Guid id );
+        Task <IEnumerable<ExpertDetailsResponse>> GetExpertDetailsAsync();
         Task<IEnumerable<UserDetailsResponse>> GetAllUserDetailsAsync();
         Task UpdateUserDetailsAsync(UserUpdateRequest userUpdate);
         Task DeleteUserAsync(Guid userId);

@@ -20,7 +20,9 @@ using User.shared.DTOS;
 
 namespace User.Services.Services
 {
-    internal class UserService(IUserRepo userRepo, IHttpContextAccessor httpContextAccesso, IMapper mapper, IPublishEndpoint publish) : IUserService
+    internal class UserService(
+        IUserRepo userRepo, IHttpContextAccessor httpContextAccesso,
+        IMapper mapper, IPublishEndpoint publish) : IUserService
     {
         public async Task BlockUserAsync(Guid userId)
         {
@@ -120,13 +122,11 @@ namespace User.Services.Services
 
         }
 
-        public async Task<UserDetailsResponse> GetUserDetailsAsync(Guid id)
+        public async Task<IEnumerable<ExpertDetailsResponse>> GetExpertDetailsAsync()
         {
-       var user= await userRepo.GetByIdAsync(id);
-            if (user == null) {
-                throw new Exception("User not found");
-            }
-            return mapper.Map<UserDetailsResponse>(user);
+            var experts = await userRepo.GetUserInRoleAsync("Expert");
+            return mapper.Map<IEnumerable<ExpertDetailsResponse>>(experts);
+
 
         }
     }

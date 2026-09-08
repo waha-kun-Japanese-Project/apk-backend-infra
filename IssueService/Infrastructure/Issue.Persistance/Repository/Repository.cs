@@ -15,8 +15,10 @@ namespace Issue.Persistence.Repository
         public void Add(TEntity entity)
             =>issueDbContext.Set<TEntity>().Add(entity);
 
-
-      
+        public async Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
+        {
+           return await issueDbContext.Set<TEntity>().GetQuery(specification).CountAsync(cancellationToken);
+        }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default)
         {

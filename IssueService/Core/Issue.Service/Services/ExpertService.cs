@@ -3,7 +3,7 @@ using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications;
-using Issue.ServiceAbstraction;
+using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS;
 using System;
 using System.Collections.Generic;
