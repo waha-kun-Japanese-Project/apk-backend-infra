@@ -43,7 +43,7 @@ namespace Issue.Persistence.Repository
 
         public void Update(TEntity entity) 
             => issueDbContext.Set<TEntity>().Update(entity);
-        public async Task<int> CountAsync(ISpecification<TEntity> spec, CancellationToken ct = default)
+        public async Task<int> CountFarmerAsync(ISpecification<TEntity> spec, CancellationToken ct = default)
         {
             return await issueDbContext.Set<TEntity>().GetQuery(spec).CountAsync(ct);
         }

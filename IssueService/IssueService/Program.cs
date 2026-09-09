@@ -1,4 +1,7 @@
 using Issue.Persistence.DependencyInjection;
+using Issue.Service.Grpc.Services;
+using Issue.ServiceAbstraction.Grpc;
+using UserClinet.Grpc;
 namespace IssueService
 {
     public class Program
@@ -15,7 +18,13 @@ namespace IssueService
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            
+            builder.Services.AddScoped<IUserGrpcClient, UserGrpcClient>();
+            builder.Services.AddGrpcClient<UserService.UserServiceClient>(
+                options =>
+                {
+                    options.Address = new Uri(
+                    builder.Configuration["Grpc:UserServiceUrl"]!);
+                });
 
             var app = builder.Build();
 

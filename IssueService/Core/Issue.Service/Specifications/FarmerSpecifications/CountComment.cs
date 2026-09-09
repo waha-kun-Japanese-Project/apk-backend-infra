@@ -8,7 +8,7 @@ namespace Issue.Service.Specifications.FarmerSpecifications
 {
     internal class CountComment : BaseSpecification<Issue.Domain.Entities.Issue.Comment>
     {
-        public CountComment(Guid IssueId) : base(p => p.IssueId == IssueId)
+        public CountComment(IEnumerable<Guid> IssueIds) : base(p => IssueIds.Contains(p.IssueId))
         {
 
         }

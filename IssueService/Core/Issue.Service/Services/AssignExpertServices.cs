@@ -36,7 +36,7 @@ namespace Issue.Service.Services
             }
 
 
-
+            throw new NotImplementedException("Auto-assigning experts is not implemented yet.");
 
 
         }

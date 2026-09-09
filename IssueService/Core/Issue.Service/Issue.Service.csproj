@@ -7,11 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Grpc]\**" />
+    <Compile Remove="Protos\**" />
+    <EmbeddedResource Remove="Grpc]\**" />
+    <EmbeddedResource Remove="Protos\**" />
+    <None Remove="Grpc]\**" />
+    <None Remove="Protos\**" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Grpc\Protos\user.proto" GrpcServices="Client" />
+	</ItemGroup>
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.1.3" />
+    <PackageReference Include="Google.Protobuf" Version="3.30.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.57.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="MassTransit" Version="8.3.6" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\Issue.Client\Issue.Client.csproj" />
     <ProjectReference Include="..\Issue.Domain\Issue.Domain.csproj" />
