@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Issue.Persistence.Context.Configuration;
 
-public class IssueSharedConfiguration : IEntityTypeConfiguration<IssueShared>
-{
     public class IssueSharedConfguration : IEntityTypeConfiguration<IssueShared>
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<IssueShared> builder)
@@ -16,9 +14,9 @@ public class IssueSharedConfiguration : IEntityTypeConfiguration<IssueShared>
             builder.Property(x => x.UserId)
                 .IsRequired();
 
-        builder.HasOne(x => x.Issue)
-            .WithMany(x => x.Shares)
-            .HasForeignKey(x => x.IssueId)
-            .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Issue)
+                .WithMany(x => x.Shares)
+                .HasForeignKey(x => x.IssueId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
-}

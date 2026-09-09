@@ -12,7 +12,7 @@ namespace Issue.Client.ServiceAbstraction
     {
         [Get("/api/User/expert-details")]
 
-        Task<IEnumerable<ExpertDetailsResponse>> GetExpertIdsAsync();
+        Task<IEnumerable<ExpertDetailsResponse>> GetExpertDetails();
 
     }
 }
