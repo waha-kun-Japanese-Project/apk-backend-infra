@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Issue.Persistence.Context.Configuration;
-
     public class IssueSharedConfguration : IEntityTypeConfiguration<IssueShared>
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<IssueShared> builder)

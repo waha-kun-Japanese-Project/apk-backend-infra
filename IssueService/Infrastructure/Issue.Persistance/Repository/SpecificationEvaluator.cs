@@ -21,6 +21,7 @@ namespace Issue.Persistence.Repository
             {
                 query = query.Include(include);
             }
+            
             return query;
         }
     }

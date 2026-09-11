@@ -33,8 +33,6 @@ namespace User.Services.Mapping
                     opt => opt.MapFrom(src => src.Region))
                 .ForMember(dest => dest.Id,
                     opt => opt.Ignore()); // Ignore Id to prevent overwriting
-            
-
 
             // UserUpdateRequest -> AppUser
             CreateMap<UserUpdateRequest, AppUser>()
@@ -42,14 +40,7 @@ namespace User.Services.Mapping
                     opt => opt.MapFrom(src => src))
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, srcMember) => srcMember != null));
-
-
-           
-
-
-
-
-
+            
 
         }
     }

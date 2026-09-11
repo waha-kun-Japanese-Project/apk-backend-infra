@@ -11,7 +11,6 @@ namespace Issue.Domain.Contract
     { 
         Expression <Func<TEntity,bool>> Criteria{ get; }
       ICollection< Expression<Func<TEntity, object>>> Includes { get; }
-
     }
 }
 

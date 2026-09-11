@@ -1,0 +1,43 @@
+﻿using Grpc.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GrpcService;
+
+internal class UserGrpcService : UserService.UserServiceBase
+{
+    private readonly UserDbContext _context;
+
+    public UserGrpcService(UserDbContext context)
+    {
+        _context = context;
+    }
+
+    public override async Task<GetUsersResponse> GetUsersByIds(
+        GetUsersRequest request,
+        ServerCallContext context)
+    {
+        var userIds = request.UserIds
+            .Select(Guid.Parse)
+            .ToList();
+
+        var users = await _context.Users
+            .Where(x => userIds.Contains(x.Id))
+            .Select(x => new UserResponse
+            {
+                Id = x.Id.ToString(),
+                Name = x.Name,
+                PhotoUrl = x.PhotoUrl ?? ""
+            })
+            .ToListAsync(context.CancellationToken);
+
+        var response = new GetUsersResponse();
+
+        response.Users.AddRange(users);
+
+        return response;
+    }
+}

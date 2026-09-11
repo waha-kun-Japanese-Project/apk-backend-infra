@@ -15,6 +15,7 @@ namespace Issue.Domain.Contract
         void Update(TEntity entity);
         Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specification,CancellationToken cancellationToken=default!);
         Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-        Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
+        Task<int> CountFarmerAsync(ISpecification<TEntity> spec, CancellationToken ct = default);
+
     }
 }

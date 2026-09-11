@@ -2,7 +2,6 @@
 using CommanLib.DependencyInjection;
 using User.Persistence.DependancyInjection;
 using User.Services.DependencyInjection;
-
 namespace Userservices
 {
     public class Program
@@ -21,6 +20,7 @@ namespace Userservices
             builder.Services.AddUserServices();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddTokenService(builder.Configuration);
+
 
             var app = builder.Build();
 
