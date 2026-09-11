@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Issue.Shared.DTOS.FarmerDtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,6 @@ namespace Issue.ServiceAbstraction.Farmer
     public interface IFarmerService
     {
         Task<IEnumerable<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>>
-            GetAllIssuesAsync(CancellationToken cancellationToken = default);
+            GetAllIssuesAsync(IssueFilteration issueFilteration,CancellationToken cancellationToken = default);
     }
 }

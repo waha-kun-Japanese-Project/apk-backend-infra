@@ -19,7 +19,7 @@ namespace Issue.Shared.DTOS.FarmerDtos
         public IssueStatus Status { get; set; }
         public string userName { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string UserPhoto { get; set; }
+        public string? UserPhoto { get; set; }
         public int CommentCount { get; set; }
         public int VoteCount { get; set; }
         public int ShareCount { get; set; }

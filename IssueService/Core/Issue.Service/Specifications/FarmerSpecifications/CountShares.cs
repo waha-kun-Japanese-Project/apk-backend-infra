@@ -12,6 +12,7 @@ internal class CountShares
     {
         public CountShares(IEnumerable<Guid> IssueIds) : base(p => IssueIds.Contains(p.IssueId))
         {
+
         }
 
 }

@@ -9,8 +9,9 @@ namespace Issue.Domain.Contract
 {
     public  interface ISpecification<TEntity> where TEntity : class
     { 
-        Expression <Func<TEntity,bool>> Criteria{ get; }
+        Expression<Func<TEntity,bool>> Criteria{ get; }
       ICollection< Expression<Func<TEntity, object>>> Includes { get; }
+        Expression<Func<TEntity, object>> OrderByDescending { get; }
     }
 }
 
