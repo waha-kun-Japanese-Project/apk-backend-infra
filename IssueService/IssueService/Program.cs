@@ -19,6 +19,7 @@ namespace IssueService
             builder.Services.AddPersistenceServices(builder.Configuration);
 
             builder.Services.AddIssueClient(builder.Configuration);
+            builder.Services.AddServiced(builder.Configuration);
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -35,6 +36,7 @@ namespace IssueService
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
 
             app.MapControllers();

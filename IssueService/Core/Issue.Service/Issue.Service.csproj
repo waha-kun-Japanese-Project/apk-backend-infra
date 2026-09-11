@@ -34,8 +34,4 @@
     <ProjectReference Include="..\Issue.ServiceAbstraction\Issue.ServiceAbstraction.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DependencyInjection\" />
-  </ItemGroup>
-
 </Project>
