@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Issue.Client.Grpc.Services;
+
+using UserClinet.Grpc;
 
 namespace Issue.Client.DependencyInjection
 {
@@ -19,9 +22,17 @@ namespace Issue.Client.DependencyInjection
                    .ConfigureHttpClient(client =>
                     {
                       client.BaseAddress = new Uri(
-                      configuration["Services:User:BaseUrl"]);
+                      configuration["Services:User:BaseUrl"]!);
                     });
 
+            services.AddScoped<IUserGrpcClient,UserGrpcClient>();
+            services.AddGrpcClient<UserService.UserServiceClient>(
+                options =>
+                {
+                    options.Address = new Uri(
+                    configuration["Grpc:UserServiceUrl"]!);
+                });
+           
             return services;
         }
     }
