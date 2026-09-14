@@ -27,7 +27,7 @@ namespace Issue.Service.Services
             var repo =  unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
             var issues = await repo.GetAllAsync(new IssueExpertInBoxSpecification(parameters), cancellationToken);
             var expert = await userService.GetExpertDetails();
-            var expertissues =issues.where
+            
             
 
             
