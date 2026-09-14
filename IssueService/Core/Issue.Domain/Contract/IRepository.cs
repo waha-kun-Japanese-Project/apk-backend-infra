@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,9 @@ namespace Issue.Domain.Contract
         Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specification,CancellationToken cancellationToken=default!);
         Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
         Task<int> CountFarmerAsync(ISpecification<TEntity> spec, CancellationToken ct = default);
+        Task<Dictionary<Guid,int>> CountByAsync(ISpecification<TEntity> spec,
+            Expression<Func<TEntity, Guid>> groupBy
+            , CancellationToken ct = default);
 
     }
 }

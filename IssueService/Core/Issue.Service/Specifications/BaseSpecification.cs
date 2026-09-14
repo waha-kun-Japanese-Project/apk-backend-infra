@@ -29,7 +29,7 @@ namespace Issue.Service.Specifications
       
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
         {
-            Includes.Add(includeExpression);
+            OrderByDescending = orderByExpression;
         }
         protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
             OrderBy=ordertby;

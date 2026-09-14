@@ -1,11 +1,14 @@
 ﻿using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Persistence.Context;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Issue.Persistence.Repository
@@ -46,6 +49,17 @@ namespace Issue.Persistence.Repository
         public async Task<int> CountFarmerAsync(ISpecification<TEntity> spec, CancellationToken ct = default)
         {
             return await issueDbContext.Set<TEntity>().GetQuery(spec).CountAsync(ct);
+        }
+        public async Task<Dictionary<Guid , int >>CountByAsync(ISpecification<TEntity> spec,
+             Expression<Func<TEntity, Guid>> groupBy
+            , CancellationToken ct = default)
+        {
+            return await issueDbContext
+                            .Set<TEntity>()
+                            .GetQuery(spec)
+                            .GroupBy(groupBy)
+                            .Select( g => new { IssueId = g.Key, Count = g.Count() })
+                            .ToDictionaryAsync(x => x.IssueId, x => x.Count, ct);
         }
 
     }
