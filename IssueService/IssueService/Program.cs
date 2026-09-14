@@ -2,6 +2,7 @@ using Issue.Persistence.DependencyInjection;
 using Issue.Service.Grpc.Services;
 using Issue.ServiceAbstraction.Grpc;
 using UserClinet.Grpc;
+using Issue.Service.DependencyInjection;  
 namespace IssueService
 {
     public class Program

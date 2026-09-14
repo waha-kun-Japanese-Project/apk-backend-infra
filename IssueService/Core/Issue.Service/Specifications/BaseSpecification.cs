@@ -21,6 +21,11 @@ namespace Issue.Service.Specifications
         public Expression<Func<TEntity, bool>> Criteria { get; private set; }
 
         public Expression<Func<TEntity, object>> GruopBy { get; private set; }
+
+        public Expression<Func<TEntity, object>> OrderBy { get; private set; }
+
+        public Expression<Func<TEntity, object>> OrderByDesc { get; private set; }
+
         protected void ApplyGroupBy(Expression<Func<TEntity, object>> groupBy)
         {
             GruopBy = groupBy;
@@ -29,5 +34,14 @@ namespace Issue.Service.Specifications
         {
             Includes.Add(includeExpression);
         }
+        protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
+            OrderBy=ordertby;
+
+
+        protected void AddOrderByDesc(Expression<Func<TEntity, object>> expression)=>
+            OrderByDesc=expression;
+
+
+
     }
 }

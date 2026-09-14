@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Issue.Shared.DTOS.Query;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,9 +11,34 @@ namespace Issue.Service.Specifications
 {
     internal class IssueExpertInBoxSpecification:BaseSpecification<Issue.Domain.Entities.Issue.Issue>
     {
-        public IssueExpertInBoxSpecification():base(null!) {
-            
-        
+        public IssueExpertInBoxSpecification(IssueQueryParameters parameters )
+            :base(CreateCirteria(parameters))
+        {
+        Sort (parameters);
+        }
+
+        private void Sort(IssueQueryParameters parameters)
+        {
+            switch (parameters.SortingOptions)
+            {
+                case SortingOptions.DataAscending:
+                    AddOrderBy(p => p.CreatedAt);
+                    break;
+                case SortingOptions.DataDescending:
+                    AddOrderByDesc(p => p.CreatedAt);
+                    break;
+                default:
+                    AddOrderBy(p => p.CreatedAt);
+                    break;
+
+
+
+            }
+
+        }
+        private static  Expression<Func<Issue.Domain.Entities.Issue.Issue,bool>> CreateCirteria (IssueQueryParameters parameters)
+        {
+            return p => (!p.AssignedExpertId.HasValue || p.AssignedExpertId == parameters.ExpertId);
         }
 
         public IssueExpertInBoxSpecification(Guid id) : base(p=>p.Id==id)

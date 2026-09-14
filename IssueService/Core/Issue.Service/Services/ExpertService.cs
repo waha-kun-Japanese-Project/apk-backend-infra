@@ -5,6 +5,7 @@ using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS;
+using Issue.Shared.DTOS.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,10 @@ namespace Issue.Service.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ExpertInboxResponse?> GetAllInboxAsync(CancellationToken cancellationToken = default)
+        public async Task<ExpertInboxResponse?> GetAllInboxAsync(IssueQueryParameters parameters,CancellationToken cancellationToken = default)
         {
             var repo =  unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
-            var issues = await repo.GetAllAsync(new IssueExpertInBoxSpecification(), cancellationToken);
+            var issues = await repo.GetAllAsync(new IssueExpertInBoxSpecification(parameters), cancellationToken);
             var expert = await userService.GetExpertDetails();
             var expertissues =issues.where
             

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Issue.Shared.DTOS;
+using Issue.Shared.DTOS.Query;
 
 namespace Issue.ServiceAbstraction.Expert
 {
     public  interface IExpertService
     {
         Task<ExpertInboxResponse> GetInboxAsync( Guid expertId, CancellationToken cancellationToken = default);
-        Task <ExpertInboxResponse?> GetAllInboxAsync(CancellationToken cancellationToken = default);
+        Task <ExpertInboxResponse?> GetAllInboxAsync(IssueQueryParameters parameters,CancellationToken cancellationToken = default);
 
         Task<CaseReviewResponse> GetCaseReviewAsync(Guid issueId, CancellationToken cancellationToken = default);
 
