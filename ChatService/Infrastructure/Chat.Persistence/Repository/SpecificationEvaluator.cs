@@ -1,4 +1,4 @@
-﻿using Issue.Domain.Contract;
+﻿using Chat.Domain.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Persistence.Repository
+namespace Chat.Persistence.Repository
 {
-    internal static class SpecificationEvaluator
+    internal static  class SpecificationEvaluator
     {
-        public static IQueryable<TEntity> GetQuery<TEntity>( this IQueryable<TEntity> inputQuery, ISpecification<TEntity> specification) where TEntity : class
+        public static IQueryable<TEntity> GetQuery<TEntity>(this IQueryable<TEntity> inputQuery, ISpecification<TEntity> specification) where TEntity : class
         {
             var query = inputQuery;
 
@@ -30,19 +30,19 @@ namespace Issue.Persistence.Repository
             }
 
             // sort 
-            if (specification.OrderBy is not null) 
+            if (specification.OrderBy is not null)
                 query = query.OrderBy(specification.OrderBy);
             else if (specification.OrderByDesc is not null)
-                query= query.OrderByDescending(specification.OrderByDesc);
+                query = query.OrderByDescending(specification.OrderByDesc);
 
 
 
             //pagination
 
             if (specification.IsPaginated)
-                query=query.Skip(specification.Skip).Take(specification.Take);
+                query = query.Skip(specification.Skip).Take(specification.Take);
 
-                return query;
+            return query;
         }
     }
 }

@@ -3,7 +3,7 @@ using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Service.Concurrency;
-using Issue.Service.Specifications;
+using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS.AssignExpert;
 using Microsoft.AspNetCore.Identity;
@@ -54,7 +54,7 @@ namespace Issue.Service.Services
             }
 
             issue.AssignedExpertId = null;
-            issue.Status = IssueStatus.Verified;
+            issue.Status = IssueStatus.Diagnosed;
 
             repository.Update(issue);
             await unitOfWork.SaveChangesAsync(cancellationToken);

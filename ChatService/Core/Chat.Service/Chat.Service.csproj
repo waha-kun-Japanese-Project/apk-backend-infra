@@ -10,4 +10,10 @@
     <ProjectReference Include="..\Chat.ServiceAbstraction\Chat.ServiceAbstraction.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MappingProfile\" />
+    <Folder Include="Dependencyinjection\" />
+    <Folder Include="Specifications\" />
+  </ItemGroup>
+
 </Project>

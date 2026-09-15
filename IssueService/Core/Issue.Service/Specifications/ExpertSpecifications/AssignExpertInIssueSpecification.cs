@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Service.Specifications
+namespace Issue.Service.Specifications.ExpertSpecifications
 {
-    internal class AssignExpertInIssueSpecification:BaseSpecification<Issue.Domain.Entities.Issue.Issue>
+    internal class AssignExpertInIssueSpecification:BaseSpecification<Domain.Entities.Issue.Issue>
     {
         public AssignExpertInIssueSpecification() : base(null!)
         { }

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications.FarmerSpecifications;
-using Issue.ServiceAbstraction.Grpc;
+
 using Issue.Shared.DTOS.FarmerDtos;
 using System;
 using System.Collections.Generic;

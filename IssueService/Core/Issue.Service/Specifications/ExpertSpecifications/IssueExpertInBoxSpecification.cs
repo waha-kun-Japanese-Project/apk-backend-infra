@@ -7,14 +7,15 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Service.Specifications
+namespace Issue.Service.Specifications.ExpertSpecifications
 {
-    internal class IssueExpertInBoxSpecification:BaseSpecification<Issue.Domain.Entities.Issue.Issue>
+    internal class IssueExpertInBoxSpecification:BaseSpecification<Domain.Entities.Issue.Issue>
     {
         public IssueExpertInBoxSpecification(IssueQueryParameters parameters )
             :base(CreateCirteria(parameters))
         {
-        Sort (parameters);
+             Sort (parameters);
+            ApplyPagination(parameters.PageSize, parameters.pageIndex);
         }
 
         private void Sort(IssueQueryParameters parameters)
@@ -36,9 +37,9 @@ namespace Issue.Service.Specifications
             }
 
         }
-        private static  Expression<Func<Issue.Domain.Entities.Issue.Issue,bool>> CreateCirteria (IssueQueryParameters parameters)
+        private static  Expression<Func<Domain.Entities.Issue.Issue,bool>> CreateCirteria (IssueQueryParameters parameters)
         {
-            return p => (!p.AssignedExpertId.HasValue || p.AssignedExpertId == parameters.ExpertId);
+            return p => !p.AssignedExpertId.HasValue || p.AssignedExpertId == parameters.ExpertId;
         }
 
         public IssueExpertInBoxSpecification(Guid id) : base(p=>p.Id==id)
