@@ -8,14 +8,14 @@ namespace Report.Shared.DTOS.Report
 {
 
     public record AiAnalysisResponse(
+        string FilePath,
         string ProblemName,
         string? ProblemArabic,
         double Confidence,
         string Severity,
         string Recommendation,
         string? Explanation,
-        List<string> RepairSteps,
-        string ModelVersion,
-        DateTime CreatedAt
+        List<string> RepairSteps
+       
     );
 }

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CommanLib\CommanLib\CommanLib.csproj" />
     <ProjectReference Include="..\Infrastructure\Presentation\Map.Presentation.csproj" />
     <ProjectReference Include="..\Infrastructure\Presestence\Map.Persistence.csproj" />
   </ItemGroup>

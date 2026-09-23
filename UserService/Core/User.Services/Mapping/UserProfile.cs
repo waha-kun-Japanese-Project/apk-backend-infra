@@ -19,7 +19,11 @@ namespace User.Services.Mapping
                .ForMember(dest => dest.Region,
                    opt => opt.MapFrom(src => src.Address.Region));
             
-
+            CreateMap<AppUser, ExpertDetailsResponse>()
+                .ForMember(dest => dest.ExpertId,
+                    opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Name,
+                    opt => opt.MapFrom(src => src.FullName));
 
             // UserUpdateRequest -> Address
             CreateMap<UserUpdateRequest, Address>()
@@ -29,8 +33,6 @@ namespace User.Services.Mapping
                     opt => opt.MapFrom(src => src.Region))
                 .ForMember(dest => dest.Id,
                     opt => opt.Ignore()); // Ignore Id to prevent overwriting
-            
-
 
             // UserUpdateRequest -> AppUser
             CreateMap<UserUpdateRequest, AppUser>()
@@ -38,14 +40,7 @@ namespace User.Services.Mapping
                     opt => opt.MapFrom(src => src))
                 .ForAllMembers(opt =>
                     opt.Condition((src, dest, srcMember) => srcMember != null));
-
-
-           
-
-
-
-
-
+            
 
         }
     }

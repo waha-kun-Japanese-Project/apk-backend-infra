@@ -16,10 +16,10 @@ internal class DbInitializer(
 {
     public async Task InitializeAsync()
     {
-        if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
-        {
-            await dbContext.Database.MigrateAsync();
-        }
+        //if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
+        //{
+        //    await dbContext.Database.MigrateAsync();
+        //}
 
         await SeedRolesAsync();
         await SeedPermissionsAsync();

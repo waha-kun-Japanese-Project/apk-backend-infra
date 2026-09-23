@@ -8,8 +8,9 @@ namespace Report.Domain.Contracts
 {
     public  interface IUnitOfWork: IDisposable
     {
-        IReportRepo ReportRepo { get; }
-        IReportAttachmentRepo ReportAttachmentRepo { get; }
+        IIssueRepo issueRepo{ get; }
+
+        IIssueAttachmentRepo issueAttachmentRepo { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

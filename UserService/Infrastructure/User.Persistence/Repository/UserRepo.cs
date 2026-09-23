@@ -32,11 +32,28 @@ namespace User.Persistence.Repository
             return await appDb.Set<AppUser>().ToListAsync();
         }
 
+       
+
         public async Task<AppUser?> GetByIdAsync(Guid id)
         { 
             return await appDb.Set<AppUser>().Include(u=> u.Address)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+        }
+
+        public async Task<IEnumerable<AppUser>?> GetUserInRoleAsync(string roleName)
+        {
+
+            var users = await (
+        from userRole in appDb.UserRoles
+        join role in appDb.Roles
+            on userRole.RoleId equals role.Id
+        join user in appDb.Users
+            on userRole.UserId equals user.Id
+        where role.Name == roleName
+        select user).ToListAsync();
+
+       return users;
         }
 
         public async Task<bool> SaveChangesAsync()

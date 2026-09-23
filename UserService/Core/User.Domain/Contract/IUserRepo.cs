@@ -10,6 +10,7 @@ namespace User.Domain.Contract
   public interface IUserRepo
     {
        Task<IEnumerable<AppUser>> GetAllAsync();
+        Task<IEnumerable<AppUser>?> GetUserInRoleAsync(string roleName);
         Task <AppUser> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);
         Task UpdateAsync(AppUser user);

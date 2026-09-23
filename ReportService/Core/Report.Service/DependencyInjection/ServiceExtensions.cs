@@ -14,9 +14,9 @@ namespace Report.Service.DependencyInjection
     {
         public static IServiceCollection AddReportService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Mapping.Profile.ReportProfile).Assembly));
+            services.AddAutoMapper(cfg => cfg.AddMaps(typeof(Mapping.Profile.IssueProfile).Assembly));
         
-            services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<IIssueService, IssueService>();
             return services;
         }
     }

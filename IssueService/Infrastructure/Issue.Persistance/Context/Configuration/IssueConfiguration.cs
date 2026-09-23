@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Issue.Domain.Entities.Issue;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-using Issue.Domain.Entities.Issue;
 
 namespace Issue.Persistence.Context.Configuration
 {
@@ -56,6 +57,19 @@ namespace Issue.Persistence.Context.Configuration
                 .WithOne(n => n.RelatedIssue)
                 .HasForeignKey(n => n.RelatedIssueId)
                 .OnDelete(DeleteBehavior.SetNull);
+            builder.HasMany(i => i.Votes)
+                .WithOne(v => v.Issue)
+                .HasForeignKey(v => v.IssueId)
+                .OnDelete(DeleteBehavior.Cascade);
+            
+          
+           
+            builder.HasMany(i => i.IssueAttachments)
+                .WithOne(ia => ia.Issue)
+                .HasForeignKey(ia => ia.IssueId)
+                .OnDelete(DeleteBehavior.Cascade);
+          
+
         }
     }
 }

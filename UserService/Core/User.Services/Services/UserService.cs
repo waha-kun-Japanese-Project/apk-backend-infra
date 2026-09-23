@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using CommanLib.EventNotification.EmailEvent;
+using CommanLib.EventNotification.UserEvent;
 using MassTransit;
+using MassTransit.Transports;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -8,6 +10,7 @@ using System;
 
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using User.Domain.Contract;
 using User.Domain.Entities;
@@ -17,7 +20,9 @@ using User.shared.DTOS;
 
 namespace User.Services.Services
 {
-    internal class UserService(IUserRepo userRepo, IHttpContextAccessor httpContextAccesso, IMapper mapper, IPublishEndpoint publish) : IUserService
+    internal class UserService(
+        IUserRepo userRepo, IHttpContextAccessor httpContextAccesso,
+        IMapper mapper, IPublishEndpoint publish) : IUserService
     {
         public async Task BlockUserAsync(Guid userId)
         {
@@ -80,7 +85,9 @@ namespace User.Services.Services
             }
 
             await userRepo.UpdateAsync(user);
+            await publish.Publish(new UserUpdatedIntegrationEvent(user.Id, user.FullName));
         }
+
 
         private async Task<AppUser> GetLoggedInUserAsync()
         {
@@ -113,9 +120,14 @@ namespace User.Services.Services
             await userRepo.SaveChangesAsync();
             await publish.Publish(new AccountEvent(user.Email, user.FullName));
 
+        }
+
+        public async Task<IEnumerable<ExpertDetailsResponse>> GetExpertDetailsAsync()
+        {
+            var experts = await userRepo.GetUserInRoleAsync("Expert");
+            return mapper.Map<IEnumerable<ExpertDetailsResponse>>(experts);
 
 
-            ;
         }
     }
 }

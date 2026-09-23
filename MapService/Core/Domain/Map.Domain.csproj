@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.20" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\IssueService\Core\Issue.Domain\Issue.Domain.csproj" />
-  </ItemGroup>
-
 </Project>
