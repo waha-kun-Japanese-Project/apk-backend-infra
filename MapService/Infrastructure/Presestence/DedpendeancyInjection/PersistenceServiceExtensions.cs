@@ -1,5 +1,6 @@
-﻿using Issue.Persistence.Context;
+﻿
 using Map.Domain.Contarcts;
+using Map.Persistence.Context;
 using Map.Persistence.Repo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,22 +18,16 @@ public static class PersistenceServiceExtensions
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services ,IConfiguration configuration)
     {
-        services.AddDbContext<ReportDbContext>(options =>
-        {
-            options.UseSqlServer(configuration.GetConnectionString("ReportConnection"));
-        });
-        services.AddDbContext<AuthDbContext>(options =>
-        {
-            options.UseSqlServer(configuration.GetConnectionString("AuthSqlConnection"));
-        });
+      
+        
         services.AddDbContext<IssueDbContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
         });
 
 
-        services.AddScoped<IReportREpo, ReportRepo>();
-        services.AddScoped<IIsuueRepo, IssueRepo>();
+       
+        services.AddScoped<IIssueRepo, IssueRepo>();
 
 
         return services;

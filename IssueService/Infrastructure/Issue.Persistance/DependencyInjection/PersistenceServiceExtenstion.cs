@@ -1,4 +1,6 @@
-﻿using Issue.Persistence.Context;
+﻿using Issue.Domain.Contract;
+using Issue.Persistence.Context;
+using Issue.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,10 +16,7 @@ namespace Issue.Persistence.DependencyInjection
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ReportDbContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("ReportConnection"));
-            });
+         
             services.AddDbContext<AuthDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("AuthSqlConnection"));
@@ -28,7 +27,8 @@ namespace Issue.Persistence.DependencyInjection
             });
 
 
-
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
 
             return services;
         }

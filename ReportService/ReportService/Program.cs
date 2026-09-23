@@ -1,25 +1,28 @@
 using CommanLib.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
 using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
-using System.Linq;
-using System.Threading.Tasks;
-using ReportService.Middleware;
 
 namespace ReportService
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
+            // Add services to the container.
 
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddPersistenceServices(builder.Configuration);
+            builder.Services.AddTokenService(builder.Configuration);
+            builder.Services.AddReportClient(builder.Configuration);
+            builder.Services.AddReportService(builder.Configuration);
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -39,49 +42,37 @@ namespace ReportService
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
             });
 
-            builder.Services.AddHealthChecks();
-            builder.Services.AddPersistenceServices(builder.Configuration);
-            builder.Services.AddTokenService(builder.Configuration);
-            builder.Services.AddReportClient(builder.Configuration);
-            builder.Services.AddReportService(builder.Configuration);
-            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-            using (var scope = app.Services.CreateScope())
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                var reportDbContext = scope.ServiceProvider.GetRequiredService<Report.Persistence.Context.ReportDbContext>();
-                if ((await reportDbContext.Database.GetPendingMigrationsAsync()).Any())
-                {
-                    await reportDbContext.Database.MigrateAsync();
-                }
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-
             app.UseHttpsRedirection();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapHealthChecks("/health");
+
             app.MapControllers();
 
             app.Run();

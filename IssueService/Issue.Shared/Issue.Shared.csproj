@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOS\" />
+    <ProjectReference Include="..\Core\Issue.Domain\Issue.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace Report.Persistence.UnitOfWork
 {
-    public class Unitofwork(ReportDbContext reportDb) : IUnitOfWork
+    public class Unitofwork(IssueDbContext issueDb) : IUnitOfWork
     {
-        public IReportRepo ReportRepo { get; }= new ReportRepo(reportDb);
+        public IIssueRepo issueRepo { get; }= new IssueRepo(issueDb);
 
-        public IReportAttachmentRepo ReportAttachmentRepo { get; } = new ReportAttachmentRepo(reportDb);
+        public IIssueAttachmentRepo issueAttachmentRepo { get; } = new IssueAttachmentRepo(issueDb);
 
     
 
         public void Dispose()
         {
-           reportDb.Dispose();
+           issueDb.Dispose();
         }
 
         public async Task<int> SaveChangesAsync(
        CancellationToken cancellationToken = default)
         {
-            return await reportDb.SaveChangesAsync(cancellationToken);
+            return await issueDb.SaveChangesAsync(cancellationToken);
         }
     }
 }

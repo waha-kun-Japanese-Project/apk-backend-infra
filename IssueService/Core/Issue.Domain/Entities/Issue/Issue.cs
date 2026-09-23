@@ -1,4 +1,4 @@
-﻿using Issue.Domain.Entities.Report;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,13 +21,20 @@ namespace Issue.Domain.Entities.Issue
         public RepairSchedule? RepairSchedule { get; set; }
         public IssueFeedback? Feedback { get; set; }
 
-        public Guid ReportId { get; set; }
+        public Guid GPSLocationId { get; set; }
+
+        public GPSLocation GPSLocation { get; set; } = null!;
 
         public ICollection<ExpertReviews> ExpertReviews { get; set; } = new List<ExpertReviews>();
         public ICollection<ResolutionActions> ResolutionActions { get; set; } = new List<ResolutionActions>();
         public ICollection<StatusHistory> StatusHistory { get; set; } = new List<StatusHistory>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+        public ICollection<IssueVote> Votes { get; set; } = new List<IssueVote>();
+        public ICollection<IssueShared> Shares { get; set; } = new List<IssueShared>(); 
+        public ICollection<AiAnalysis> AiAnalyses { get; set; } =new List<AiAnalysis>();
+        public ICollection<IssueAttachment> IssueAttachments { get; set; } = new List<IssueAttachment>();
+
 
     }
 }
