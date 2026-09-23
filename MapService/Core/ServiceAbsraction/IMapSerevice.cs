@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Map.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,9 @@ namespace Map.ServiceAbsraction
 {
     public interface IMapSerevice
     {
-        Task<IEnumerable<Map.Shared.MapResponseDto>> ShowIssueInMapAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<MapResponseDto>> ShowIssueInMapAsync(int pageSize, int page, CancellationToken cancellationToken);
 
-        Task<Map.Shared.MapResponseDto> SearchForIssueInMapAsync(Guid IssueId , CancellationToken cancellationToken);
+        Task<MapResponseDto> SearchForIssueInMapAsync(Guid IssueId ,CancellationToken cancellationToken);
+        Task<IEnumerable<MapResponseDto>> SearchForIssueByTitleInMapAsync(string title, int pageSize, int page, CancellationToken cancellationToken);
     }
 }

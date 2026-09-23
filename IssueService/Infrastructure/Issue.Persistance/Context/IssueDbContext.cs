@@ -1,4 +1,5 @@
 ﻿using Issue.Domain.Entities.Issue;
+
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,20 @@ namespace Issue.Persistence.Context
     {
         public DbSet<Issue.Domain.Entities.Issue.Issue> Issues { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
-        public DbSet<IssueFeedback> issueFeedbacks { get; set; } = null!;
+        public DbSet<IssueShared> Shares { get; set; }
+        public DbSet<IssueVote> Votes { get; set; }
+        public DbSet<IssueFeedback> IssueFeedbacks { get; set; } = null!;
         public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
         public DbSet<ResolutionActions> ResolutionActions { get; set; } = null!;
         public DbSet<MaintenanceTeam> MaintenanceTeams { get; set; } = null!;
         public DbSet<RepairSchedule> RepairSchedules { get; set; } = null!;
-        public DbSet<Notification> notifications { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
         public DbSet<ExpertReviews> ExpertReviews { get; set; } = null!;
+        public DbSet<GPSLocation> GPSLocations { get; set; } = null!;
+        public DbSet<AiAnalysis> AiAnalyses { get; set; } = null!;
+        public DbSet<IssueAttachment> IssueAttachments { get; set; } = null!;
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

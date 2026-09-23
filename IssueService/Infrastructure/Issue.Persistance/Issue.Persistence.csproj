@@ -7,14 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="UnitOfWork\**" />
+    <EmbeddedResource Remove="UnitOfWork\**" />
+    <None Remove="UnitOfWork\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core\Issue.Domain\Issue.Domain.csproj" />
     <ProjectReference Include="..\..\Core\Issue.Service\Issue.Service.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Context\Migrations\" />
-    <Folder Include="UnitOfWork\" />
-    <Folder Include="Repository\" />
   </ItemGroup>
 
   <ItemGroup>

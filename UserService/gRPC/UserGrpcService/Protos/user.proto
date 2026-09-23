@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = " UserService.Grpc";
+
+package user;
+
+service UserGRPcService {
+    rpc GetUsersByIds (GetUsersRequest)
+        returns (GetUsersResponse);
+}
+
+message GetUsersRequest {
+    repeated string user_ids = 1;
+}
+
+message GetUsersResponse {
+    repeated UserResponse users = 1;
+}
+
+message UserResponse {
+    string id = 1;
+    string name = 2;
+    string photo_url = 3;
+}

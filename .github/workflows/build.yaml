@@ -6,7 +6,7 @@ on:
       - '**.md'
 
 env:
-  DOCKERHUB_NAMESPACE: mohamedelsawyy 
+  DOCKERHUB_NAMESPACE: mohamedelsawyy
 
 jobs:
   build-and-push:
@@ -23,6 +23,14 @@ jobs:
             dockerfile: MediaStorageService/MediaStorageService/Dockerfile
           - service: reportservice
             dockerfile: ReportService/ReportService/Dockerfile
+          - service: communityservice
+            dockerfile: CommuntiyService/CommunityService/Dockerfile   # folder name has a typo in the repo
+          - service: dashboardservice
+            dockerfile: DashboardService/DashboardService/Dockerfile
+          - service: mapservice
+            dockerfile: MapService/Map/Dockerfile
+          - service: notificationservice
+            dockerfile: NotificationService/NotificationService/Dockerfile
     outputs:
       image_tag: ${{ steps.vars.outputs.image_tag }}
     steps:
@@ -74,10 +82,17 @@ jobs:
             [userservice]=user-definition.yml
             [mediastorageservice]=media-storage-definition.yml
             [reportservice]=report-definition.yml
+            [communityservice]=community-definition.yml
+            [dashboardservice]=dashboard-definition.yml
+            [mapservice]=map-definition.yml
+            [notificationservice]=notification-definition.yml
           )
           for svc in "${!FILES[@]}"; do
             f="${FILES[$svc]}"
-            [ -f "$f" ] || continue
+            if [ ! -f "$f" ]; then
+              echo "::warning::Manifest $f not found for $svc, skipping"
+              continue
+            fi
             sed -i "s|image: ${{ env.DOCKERHUB_NAMESPACE }}/${svc}:.*|image: ${{ env.DOCKERHUB_NAMESPACE }}/${svc}:${TAG}|" "$f"
           done
           grep -H "image:" *.yml

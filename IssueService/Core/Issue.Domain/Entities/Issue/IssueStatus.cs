@@ -10,8 +10,8 @@ namespace Issue.Domain.Entities.Issue
     {
         Reported=0,
         Diagnosed=1,
-        Verified=2,
-        Assigned=3,
+        Assigned = 2,
+        Reviewed= 3,
         Scheduled=4,
         Repaired=5,
         completed=6,
