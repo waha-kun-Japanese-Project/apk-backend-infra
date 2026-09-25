@@ -8,16 +8,13 @@ EXPOSE 8080
 EXPOSE 8081
 
 
-# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["DashboardService/DashboardService/DashboardService.csproj", "DashboardService/DashboardService/"]
-RUN dotnet restore "./DashboardService/DashboardService/DashboardService.csproj"
 COPY . .
 WORKDIR "/src/DashboardService/DashboardService"
+RUN dotnet restore "./DashboardService.csproj"
 RUN dotnet build "./DashboardService.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
