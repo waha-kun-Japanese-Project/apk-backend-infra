@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dashboard.Service;
-using Dashboard.Service.Services;
 using Dashboard.ServicesAbstract;
 
 using MassTransit;
