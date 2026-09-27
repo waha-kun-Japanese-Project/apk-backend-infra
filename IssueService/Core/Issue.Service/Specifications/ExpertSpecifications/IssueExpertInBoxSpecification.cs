@@ -44,7 +44,7 @@ namespace Issue.Service.Specifications.ExpertSpecifications
 
         public IssueExpertInBoxSpecification(Guid id) : base(p=>p.Id==id)
         {
-            AddInclude(p => p.AiAnalyses);
+            //AddInclude(p => p.AiAnalyses);
             AddInclude(p => p.GPSLocation);
             AddInclude(p => p.IssueAttachments);
             AddInclude(p=>p.ExpertReviews);

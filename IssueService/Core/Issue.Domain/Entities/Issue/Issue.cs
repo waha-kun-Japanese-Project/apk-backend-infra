@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Issue.Domain.Entities.Issue
 {
-    public  class Issue:BaseEntity<Guid>
+    public class Issue : BaseEntity<Guid>
     {
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
@@ -30,8 +29,7 @@ namespace Issue.Domain.Entities.Issue
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
         public ICollection<IssueVote> Votes { get; set; } = new List<IssueVote>();
-        public ICollection<IssueShared> Shares { get; set; } = new List<IssueShared>(); 
-        public ICollection<AiAnalysis> AiAnalyses { get; set; } =new List<AiAnalysis>();
+        public ICollection<IssueShared> Shares { get; set; } = new List<IssueShared>();
         public ICollection<IssueAttachment> IssueAttachments { get; set; } = new List<IssueAttachment>();
 
 

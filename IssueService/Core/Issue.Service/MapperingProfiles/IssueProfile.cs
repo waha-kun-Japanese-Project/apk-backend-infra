@@ -51,8 +51,8 @@ namespace Issue.Service.MapperingProfiles
                       opt => opt.MapFrom(src => src.GPSLocation.Longitude.ToString()))
                .ForMember(dest => dest.Attachments,
                       opt => opt.MapFrom(src => src.IssueAttachments))
-              .ForMember(dest => dest.AiAnalysis,
-                      opt => opt.MapFrom(src => src.AiAnalyses))
+              //.ForMember(dest => dest.AiAnalysis,
+              //        opt => opt.MapFrom(src => src.AiAnalyses))
               .ForMember(dest => dest.ExpertReviews,
                       opt => opt.MapFrom(src => src.ExpertReviews));
 

@@ -24,7 +24,8 @@ namespace Issue.Domain.Entities.Issue
 
         public string ModelVersion { get; set; } = string.Empty;
 
+        public Guid IssueAttachmentId { get; set; }
+        public IssueAttachment IssueAttachment { get; set; } = null!;
+
     }
 }
-
-

@@ -30,17 +30,17 @@ namespace Chat.Persistence.Repository
             }
 
             // sort 
-            if (specification.OrderBy is not null)
-                query = query.OrderBy(specification.OrderBy);
-            else if (specification.OrderByDesc is not null)
-                query = query.OrderByDescending(specification.OrderByDesc);
+            //if (specification.OrderBy is not null)
+            //    query = query.OrderBy(specification.OrderBy);
+            //else if (specification.OrderByDesc is not null)
+            //    query = query.OrderByDescending(specification.OrderByDesc);
 
 
 
             //pagination
 
-            if (specification.IsPaginated)
-                query = query.Skip(specification.Skip).Take(specification.Take);
+            //if (specification.IsPaginated)
+            //    query = query.Skip(specification.Skip).Take(specification.Take);
 
             return query;
         }

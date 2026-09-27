@@ -2,7 +2,6 @@
 using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
-using Issue.Service.Concurrency;
 using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS.AssignExpert;
@@ -16,8 +15,7 @@ using System.Threading.Tasks;
 namespace Issue.Service.Services
 {
     public class AssignExpertServices(
-        IUnitOfWork unitOfWork, IMapper mapper,
-       ExpertAssignmentGate gate): IAssignExpertServices
+        IUnitOfWork unitOfWork, IMapper mapper): IAssignExpertServices
     {
         public async Task<AssignExpertResponse> AssignExpertAsync(
             Guid issueId, AssignExpertRequest request,
