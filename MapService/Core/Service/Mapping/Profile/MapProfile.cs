@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Map.Domain.Entities.ISSUE;
 using Map.Shared;
 using System.Data.SqlTypes;
+using IssueEntity = Map.Domain.Entities.ISSUE.Issue;
 
 namespace Map.Service.Mapping.Profile
 {
@@ -9,7 +9,7 @@ namespace Map.Service.Mapping.Profile
     {
         public MapProfile()
         {
-            CreateMap<Issue, MapResponseDto>()
+            CreateMap<IssueEntity, MapResponseDto>()
 
                 // Id
                 .ForMember(
