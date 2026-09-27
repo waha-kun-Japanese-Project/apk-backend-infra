@@ -17,13 +17,7 @@ namespace Issue.Client.DependencyInjection
     {
         public static IServiceCollection AddIssueClient(this IServiceCollection services,IConfiguration configuration)
         {
-            services
-                   .AddRefitClient<IUserService>()
-                   .ConfigureHttpClient(client =>
-                    {
-                      client.BaseAddress = new Uri(
-                      configuration["Services:User:BaseUrl"]!);
-                    });
+            
 
             services.AddScoped<IUserGrpcClient,UserGrpcClient>();
             services.AddGrpcClient<UserService.UserServiceClient>(

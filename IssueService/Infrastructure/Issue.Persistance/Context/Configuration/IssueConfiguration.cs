@@ -38,11 +38,7 @@ namespace Issue.Persistence.Context.Configuration
                 .HasForeignKey(er => er.IssueId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(i => i.ResolutionActions)
-                .WithOne(ra => ra.Issue)
-                .HasForeignKey(ra => ra.IssueId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+           
             builder.HasMany(i => i.StatusHistory)
                 .WithOne(sh => sh.Issue)
                 .HasForeignKey(sh => sh.IssueId)

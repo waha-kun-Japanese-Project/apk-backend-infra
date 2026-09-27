@@ -17,7 +17,7 @@ namespace Issue.Service.Services
 {
     public class AssignExpertServices(
         IUnitOfWork unitOfWork, IMapper mapper,
-       ExpertAssignmentGate gate, IUserService userService ) : IAssignExpertServices
+       ExpertAssignmentGate gate): IAssignExpertServices
     {
         public async Task<AssignExpertResponse> AssignExpertAsync(
             Guid issueId, AssignExpertRequest request,
@@ -29,19 +29,19 @@ namespace Issue.Service.Services
         public async Task<AssignExpertResponse> AutoAssignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)
         {
          
-          var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
+          //var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
 
-            var expert =(await  userService.GetExpertDetails()).ToDictionary(e => e.ExpertId, e => e.Name);
-            if (expert.Count == 0)
-            {
-                throw new InvalidOperationException("No experts available for assignment.");
-            }
-            return await gate.RunExclusiveAsync(async () =>
-            {
-                var expertId = await PickLeastBusyExpertAsync(expert.Keys, cancellationToken);
-                return await SetAssignedExpertAsync(issue, expertId, cancellationToken);
-            }, cancellationToken);
-
+          //  //var expert =(await  userService.GetExpertDetails()).ToDictionary(e => e.ExpertId, e => e.Name);
+          //  //if (expert.Count == 0)
+          //  //{
+          //  //    throw new InvalidOperationException("No experts available for assignment.");
+          //  //}
+          //  return await gate.RunExclusiveAsync(async () =>
+          //  {
+          //      var expertId = await PickLeastBusyExpertAsync(expert.Keys, cancellationToken);
+          //      return await SetAssignedExpertAsync(issue, expertId, cancellationToken);
+          //  }, cancellationToken);
+          throw new NotImplementedException("AutoAssignExpertAsync is not implemented yet.");
         }
 
         public async Task UnassignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)

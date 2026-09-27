@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Issue.Service.Services
 {
-    public class ExpertService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService) : IExpertService
+    public class ExpertService(IUnitOfWork unitOfWork, IMapper mapper) : IExpertService
     {
         //public Task<ResolutionActionResponse> CreateResolutionActionAsync(Guid issueId, CreateResolutionActionRequest request, CancellationToken cancellationToken = default)
         //{
@@ -63,7 +63,6 @@ namespace Issue.Service.Services
                 ScheduledDate = request.ScheduledDate,
                 SlotEnd=request.SlotEnd,
                 SlotStart=request.SlotStart,
-                TeamId=request.TeamId,
                 FarmerNotified=request.FarmerNotified,
                 Notes=request.Notes
 

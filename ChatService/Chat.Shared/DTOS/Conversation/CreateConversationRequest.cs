@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Shared.DTOS
+namespace Chat.Shared.DTOS.Conversation
 {
-    public record MaintenanceTeamResponse(
-       Guid Id,
-       string Name
-      )
+    public  record CreateConversationRequest( Guid IssueId, Guid ExpertId)
     {
     }
 }

@@ -26,7 +26,6 @@ namespace Issue.Domain.Entities.Issue
         public GPSLocation GPSLocation { get; set; } = null!;
 
         public ICollection<ExpertReviews> ExpertReviews { get; set; } = new List<ExpertReviews>();
-        public ICollection<ResolutionActions> ResolutionActions { get; set; } = new List<ResolutionActions>();
         public ICollection<StatusHistory> StatusHistory { get; set; } = new List<StatusHistory>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Shared.DTOS.Client
+namespace Chat.Shared.DTOS.Message
 {
-    public record ExpertDetailsResponse(Guid ExpertId, string Name)
+    public record SendMessageRequest(Guid ConversationId, string Content)
     {
     }
 }

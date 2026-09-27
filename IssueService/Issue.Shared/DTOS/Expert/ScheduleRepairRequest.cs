@@ -10,7 +10,6 @@ namespace Issue.Shared.DTOS
        DateOnly ScheduledDate,
        TimeOnly SlotStart,
        TimeOnly SlotEnd,
-       Guid? TeamId,
        bool FarmerNotified,
        string? Notes)
     {
