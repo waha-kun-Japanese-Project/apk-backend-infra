@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Map.Shared
 {
-    public class MapResponseDto
+    public class ReportMapResponse
     {
         public Guid IssueId { get; set; }
         public Guid ReportId { get; set; }
