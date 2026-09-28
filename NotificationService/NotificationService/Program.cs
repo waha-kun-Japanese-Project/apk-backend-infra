@@ -52,7 +52,7 @@ namespace NotificationService
 
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("Firebase/firebase-adminsdk.json")
+                Credential = GoogleCredential.FromFile("AuthService/AuthService/FireBase/graduation-project-3c67f-firebase-adminsdk-fbsvc-b88880ea28.json")
             });
 
             var app = builder.Build();
