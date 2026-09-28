@@ -29,8 +29,6 @@ namespace NotificationService
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    // Was hardcoded to "localhost"/"guest"/"guest" — the manifest already
-                    // sets RabbitMq__Host/Username/Password, this just reads them.
                     var host = builder.Configuration["RabbitMq:Host"] ?? "localhost";
                     var username = builder.Configuration["RabbitMq:Username"] ?? "guest";
                     var password = builder.Configuration["RabbitMq:Password"] ?? "guest";
@@ -50,11 +48,15 @@ namespace NotificationService
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 
+            var firebasePath = Path.Combine(
+                            builder.Environment.ContentRootPath,
+                            "FireBase",
+                            "graduation-project-3c67f-firebase-adminsdk-fbsvc-b88880ea28.json");
+
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("AuthService/AuthService/FireBase/graduation-project-3c67f-firebase-adminsdk-fbsvc-b88880ea28.json")
+                Credential = GoogleCredential.FromFile(firebasePath)
             });
-
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
