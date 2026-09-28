@@ -1,4 +1,3 @@
-
 using CommanLib.DependencyInjection;
 using Map.Persistence.DedpendeancyInjection;
 using Map.Service.DependanceInjection;
@@ -12,15 +11,13 @@ namespace Map
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddServices();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddTokenService(builder.Configuration);
+            builder.Services.AddHealthChecks();
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -40,24 +37,23 @@ namespace Map
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -68,7 +64,8 @@ namespace Map
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
-            
+            app.MapHealthChecks("/health");
+
             app.Run();
         }
     }
