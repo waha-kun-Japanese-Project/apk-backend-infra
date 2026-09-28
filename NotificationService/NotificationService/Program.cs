@@ -1,7 +1,5 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-
-
 using MassTransit;
 using Notification.Consumer;
 using Notification.Service;
@@ -16,12 +14,10 @@ namespace NotificationService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddHealthChecks();
 
             builder.Services.AddMassTransit(x =>
             {
@@ -31,25 +27,24 @@ namespace NotificationService
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
+                    // Was hardcoded to "localhost"/"guest"/"guest" — the manifest already
+                    // sets RabbitMq__Host/Username/Password, this just reads them.
+                    var host = builder.Configuration["RabbitMq:Host"] ?? "localhost";
+                    var username = builder.Configuration["RabbitMq:Username"] ?? "guest";
+                    var password = builder.Configuration["RabbitMq:Password"] ?? "guest";
 
-                    cfg.Host(
-                        "localhost",
-                        "/",
-                        h =>
-                        {
-                            h.Username("guest");
-                            h.Password("guest");
-                        });
-
+                    cfg.Host(host, "/", h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
 
                     cfg.ConfigureEndpoints(context);
-
                 });
             });
-            
 
             builder.Services.AddScoped<ISmsService, TwilioSmsService>();
-            builder.Services.Configure<MailSettings>(builder.Configuration .GetSection("MailSettings"));
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IFireBaseService, FireBaseService>();
 
@@ -57,9 +52,9 @@ namespace NotificationService
             {
                 Credential = GoogleCredential.FromFile("Firebase/firebase-adminsdk.json")
             });
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -67,11 +62,10 @@ namespace NotificationService
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
 
-
             app.MapControllers();
+            app.MapHealthChecks("/health");
 
             app.Run();
         }

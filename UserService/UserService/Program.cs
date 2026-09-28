@@ -1,7 +1,7 @@
-
 using CommanLib.DependencyInjection;
 using User.Persistence.DependancyInjection;
 using User.Services.DependencyInjection;
+
 namespace Userservices
 {
     public class Program
@@ -10,21 +10,17 @@ namespace Userservices
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddUserServices();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddTokenService(builder.Configuration);
-
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -35,8 +31,8 @@ namespace Userservices
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
+            app.MapHealthChecks("/health");
 
             app.Run();
         }
