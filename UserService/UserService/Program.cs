@@ -1,6 +1,7 @@
 using CommanLib.DependencyInjection;
 using User.Persistence.DependancyInjection;
 using User.Services.DependencyInjection;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Userservices
 {
@@ -32,7 +33,7 @@ namespace Userservices
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
 
             app.Run();
         }

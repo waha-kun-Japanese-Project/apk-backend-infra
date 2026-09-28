@@ -23,27 +23,27 @@ namespace Auth.Persistence.DependencyInjection
         {
             services.AddSingleton<IConnectionMultiplexer>(cfig =>
             {
-
-                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnection")!);
-            }
-           );
+                var options = ConfigurationOptions.Parse(configuration.GetConnectionString("RedisConnection")!);
+                options.AbortOnConnectFail = false;
+                return ConnectionMultiplexer.Connect(options);
+            });
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
 
             });
-         
+
             services.AddScoped<IDbInitializer, DbInitializers.DbInitializer>();
-            services.AddScoped<IOtpRepository,OtpRepository>();
+            services.AddScoped<IOtpRepository, OtpRepository>();
             services.AddScoped<ITokenRefreshRepository, RefreshTokenRepository>();
 
 
 
 
-            ConfigureIdentity  (services, configuration);
+            ConfigureIdentity(services, configuration);
             return services;
         }
-        private  static void   ConfigureIdentity  (this IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddIdentityCore<AppUser>(options =>
             {
@@ -55,7 +55,7 @@ namespace Auth.Persistence.DependencyInjection
             })
                 .AddRoles<AppRole>().AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
-            services.Configure<DataProtectionTokenProviderOptions>(opt=>
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
             {
                 opt.TokenLifespan = TimeSpan.FromHours(2);
             });

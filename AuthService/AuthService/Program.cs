@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Auth_Services
 {
@@ -53,7 +54,7 @@ namespace Auth_Services
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
 
             app.Run();
         }

@@ -1,41 +1,36 @@
 ﻿using Auth.Domain.Contracts;
-using Auth.Domain.Contracts;
 using Auth.ServiceAbstraction;
 using MassTransit;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notification.Service;
 using Notification.ServicesAbstract;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Auth.Service.DependanceInjection
 {
-    public static  class ServiceExtensions
+    public static class ServiceExtensions
     {
-        public static IServiceCollection AddServices(this IServiceCollection services )
+        public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IOTPService, OtpService>();
-            //services.AddScoped<ISmsService, SmsService>();
-            //services.AddScoped<IEmailSender, EmailSender>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IFireBaseService, FireBaseService>();
-            services.AddMassTransit(x=>x.UsingRabbitMq((context, cfg) =>
+
+            services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                // Reads RabbitMq__Host / Port / Username / Password from the K8s env vars.
+                var config = context.GetRequiredService<IConfiguration>();
+                var host = config["RabbitMq:Host"] ?? "localhost";
+                var port = ushort.TryParse(config["RabbitMq:Port"], out var p) ? p : (ushort)5672;
+
+                cfg.Host(host, port, "/", h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(config["RabbitMq:Username"] ?? "guest");
+                    h.Password(config["RabbitMq:Password"] ?? "guest");
                 });
             }));
-
-
-
 
             return services;
         }

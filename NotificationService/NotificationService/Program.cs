@@ -5,6 +5,8 @@ using Notification.Consumer;
 using Notification.Service;
 using Notification.ServicesAbstract;
 using Notification.Settings;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 
 namespace NotificationService
 {
@@ -65,8 +67,7 @@ namespace NotificationService
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHealthChecks("/health");
-
+            app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
             app.Run();
         }
     }
