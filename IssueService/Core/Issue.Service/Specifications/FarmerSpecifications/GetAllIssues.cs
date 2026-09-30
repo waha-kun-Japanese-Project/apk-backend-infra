@@ -13,7 +13,8 @@ namespace Issue.Service.Specifications.FarmerSpecifications
     {
         public GetAllIssues(IssueFilteration issueFilteration) : base(p => (!issueFilteration.Completed.HasValue || p.Status == issueFilteration.Completed)
                     && (!issueFilteration.Critical.HasValue || p.Priority == issueFilteration.Critical)
-                    && (!issueFilteration.Assigend.HasValue || p.Status == issueFilteration.Assigend))
+                    && (!issueFilteration.Assigend.HasValue || p.Status == issueFilteration.Assigend)
+                    )
 
         {
             AddInclude(x => x.IssueAttachments);

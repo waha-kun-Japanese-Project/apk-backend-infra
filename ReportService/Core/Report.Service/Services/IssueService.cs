@@ -29,7 +29,7 @@ namespace Report.Service.Services
 
             await using var stream = photo.OpenReadStream();
             var uploadResult = await storageClient.UploadAsync(
-                new StreamPart(stream, photo.FileName, photo.ContentType),"reportimage");
+                new StreamPart(stream, photo.FileName , photo.ContentType ),"reportimage");
 
             await using var analysisStream = photo.OpenReadStream();
 

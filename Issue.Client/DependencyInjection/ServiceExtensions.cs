@@ -26,13 +26,20 @@ namespace Issue.Client.DependencyInjection
                     });
 
             services.AddScoped<IUserGrpcClient,UserGrpcClient>();
-            services.AddGrpcClient<UserService.UserServiceClient>(
+            services.AddGrpcClient<UserClinet.Grpc.UserService.UserServiceClient>(
                 options =>
                 {
                     options.Address = new Uri(
                     configuration["Grpc:UserServiceUrl"]!);
                 });
-           
+            services.AddGrpcClient<UserService.Grpc.ExpertService.ExpertServiceClient>(
+                options =>
+                {
+                    options.Address = new Uri(
+                    configuration["Grpc:UserServiceUrl"]!);
+                });
+
+
             return services;
         }
     }

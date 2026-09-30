@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "ExpertService.Grpc";
+
+package user;
+
+service GrpcService {
+    rpc GetExpertsByIds (GetExpertsRequest)
+        returns (GetExpertsResponse);
+}
+
+message GetExpertsRequest {
+    repeated string user_ids = 1;
+}
+
+message GetExpertsResponse {
+    repeated ExpertsResponse users = 1;
+}
+
+message ExpertsResponse {
+    string id = 1;
+    string name = 2;
+    string photo_url = 3;
+}

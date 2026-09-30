@@ -28,6 +28,10 @@ namespace Issue.Service.Specifications
         {
             Includes.Add(includeExpression);
         }
+        protected void AddCriteria(Expression<Func<TEntity, bool>> criteriaExpression)
+        {
+            Criteria = criteriaExpression;
+        }
 
         protected void AddOrderBy(Expression<Func<TEntity, object>> orderByExpression)
         {

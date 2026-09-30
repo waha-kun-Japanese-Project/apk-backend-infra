@@ -28,6 +28,8 @@
     <PackageReference Include="MassTransit" Version="8.3.6" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
   </ItemGroup>
+	
+	
   <ItemGroup>
     <ProjectReference Include="..\..\..\Issue.Client\Issue.Client.csproj" />
     <ProjectReference Include="..\Issue.Domain\Issue.Domain.csproj" />

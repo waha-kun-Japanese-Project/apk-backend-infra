@@ -1,5 +1,5 @@
 ﻿using Issue.Domain.Entities.Issue;
-using Issue.Domain.Entities.ReadModels;
+//using Issue.Domain.Entities.ReadModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ namespace Issue.Persistence.Context
 
 
 
-        public DbSet<ExpertInboxReadModel> ExpertInboxReadModels=> Set<ExpertInboxReadModel>();
+        //public DbSet<ExpertInboxReadModel> ExpertInboxReadModels=> Set<ExpertInboxReadModel>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

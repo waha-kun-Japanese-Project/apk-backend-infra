@@ -18,4 +18,11 @@ namespace Report.Shared.DTOS.Report
         List<string> RepairSteps
        
     );
+    //public class SeverityDto
+    //{
+    //    public string Level { get; set; }
+    //    public string urgency { get; set; }
+    //    public string recommended_action { get; set; }
+    //    // Add other fields returned by FastAPI inside the severity object
+    //}
 }
