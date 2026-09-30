@@ -13,21 +13,41 @@ namespace Issue.Persistence.Repository
         public static IQueryable<TEntity> GetQuery<TEntity>( this IQueryable<TEntity> inputQuery, ISpecification<TEntity> specification) where TEntity : class
         {
             var query = inputQuery;
-            if (specification.Criteria != null) { 
-                query= query.Where(specification.Criteria);
-            }
+
+
+
             // Apply includes
             foreach (var include in specification.Includes)
             {
                 query = query.Include(include);
             }
-            
-            if(specification.OrderByDescending != null)
+
+            foreach (var includeChain in specification.IncludeChains)
             {
-                query = query.OrderByDescending(specification.OrderByDescending);
+                query = includeChain(query);
             }
-            
-            return query;
+
+            //where filter 
+
+            if (specification != null)
+            {
+                query = query.Where(specification.Criteria);
+            }
+
+            // sort 
+            if (specification.OrderBy is not null) 
+                query = query.OrderBy(specification.OrderBy);
+            else if (specification.OrderByDesc is not null)
+                query= query.OrderByDescending(specification.OrderByDesc);
+
+
+
+            //pagination
+
+            if (specification.IsPaginated)
+                query=query.Skip(specification.Skip).Take(specification.Take);
+
+                return query;
         }
     }
 }

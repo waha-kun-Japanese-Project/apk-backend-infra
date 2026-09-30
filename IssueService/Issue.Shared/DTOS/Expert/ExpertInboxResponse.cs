@@ -11,12 +11,11 @@ namespace Issue.Shared.DTOS
         Guid Id,
         string Title,
         string? Description,
-        IssueStatus Status,
-        IssuePriority Priority,
-        string? ThumbnailUrl,
+        string Status,
+        string Priority,
         DateTime CreatedAt,
-        Guid? AssignedExpertId,
-        string FullName)
+        Guid? AssignedExpertId)
+        
     {
     }
 }

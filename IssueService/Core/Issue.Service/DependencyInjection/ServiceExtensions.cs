@@ -1,4 +1,4 @@
-﻿using Issue.Service.Concurrency;
+﻿
 using Issue.Service.Services;
 using Issue.ServiceAbstraction.Expert;
 using Microsoft.Extensions.Configuration;
@@ -20,7 +20,7 @@ namespace Issue.Service.DependencyInjection
 
             services.AddScoped<IExpertService, ExpertService>();
             services.AddScoped<IAssignExpertServices, AssignExpertServices>();
-            services.AddSingleton<ExpertAssignmentGate>();
+           
             return services;
         }
     }

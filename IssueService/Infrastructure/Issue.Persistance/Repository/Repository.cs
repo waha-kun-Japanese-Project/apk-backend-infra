@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Issue.Persistence.Repository
 {
-    internal class Repository<TEntity, TKey>(IssueDbContext issueDbContext) : IRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
+    public class Repository<TEntity, TKey>(IssueDbContext issueDbContext) : IRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
         public void Add(TEntity entity)
             =>issueDbContext.Set<TEntity>().Add(entity);
@@ -35,10 +35,7 @@ namespace Issue.Persistence.Repository
             return await issueDbContext.Set<TEntity>().GetQuery(specification).FirstOrDefaultAsync(cancellationToken);
 
         }
-        //public async Task<TEntity?> GetIssuesCount(ISpecification<TEntity>  specification, CancellationToken cancellationToken = default)
-        //{
-        //    return await issueDbContext.Set<TEntity>().GetQuery(specification).CountAsync(, cancellationToken);
-        //}
+       
 
         public void Remove(TEntity entity)
             => issueDbContext.Set<TEntity>().Remove(entity);
@@ -46,10 +43,7 @@ namespace Issue.Persistence.Repository
 
         public void Update(TEntity entity) 
             => issueDbContext.Set<TEntity>().Update(entity);
-        public async Task<int> CountFarmerAsync(ISpecification<TEntity> spec, CancellationToken ct = default)
-        {
-            return await issueDbContext.Set<TEntity>().GetQuery(spec).CountAsync(ct);
-        }
+     
         public async Task<Dictionary<Guid , int >>CountByAsync(ISpecification<TEntity> spec,
              Expression<Func<TEntity, Guid>> groupBy
             , CancellationToken ct = default)

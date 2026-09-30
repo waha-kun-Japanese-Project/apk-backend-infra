@@ -35,37 +35,50 @@ namespace Issue.Persistence.Context.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Explanation")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
-                    b.Property<Guid?>("IssueId")
+                    b.Property<Guid>("IssueAttachmentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ModelVersion")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ProblemArabic")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ProblemName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Recommendation")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("RepairSteps")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("Severity")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IssueId");
+                    b.HasIndex("IssueAttachmentId")
+                        .IsUnique();
 
                     b.ToTable("AiAnalyses");
                 });
@@ -81,6 +94,12 @@ namespace Issue.Persistence.Context.Migrations
 
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Text")
                         .HasMaxLength(2000)
@@ -125,6 +144,12 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<DateTime>("ReviewedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IssueId");
@@ -148,6 +173,12 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<string>("Longitude")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 
@@ -178,6 +209,12 @@ namespace Issue.Persistence.Context.Migrations
 
                     b.Property<Guid>("ReporterId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -212,12 +249,22 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Purpose")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
 
@@ -245,6 +292,12 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IssueId")
@@ -264,6 +317,12 @@ namespace Issue.Persistence.Context.Migrations
 
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -287,6 +346,12 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
@@ -296,25 +361,6 @@ namespace Issue.Persistence.Context.Migrations
                         .IsUnique();
 
                     b.ToTable("Votes");
-                });
-
-            modelBuilder.Entity("Issue.Domain.Entities.Issue.MaintenanceTeam", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MaintenanceTeams");
                 });
 
             modelBuilder.Entity("Issue.Domain.Entities.Issue.Notification", b =>
@@ -335,6 +381,12 @@ namespace Issue.Persistence.Context.Migrations
 
                     b.Property<Guid?>("RelatedIssueId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -373,6 +425,12 @@ namespace Issue.Persistence.Context.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<DateOnly>("ScheduledDate")
                         .HasColumnType("date");
 
@@ -382,50 +440,12 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<TimeOnly>("SlotStart")
                         .HasColumnType("time");
 
-                    b.Property<Guid?>("TeamId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("IssueId")
                         .IsUnique();
 
-                    b.HasIndex("TeamId");
-
                     b.ToTable("RepairSchedules");
-                });
-
-            modelBuilder.Entity("Issue.Domain.Entities.Issue.ResolutionActions", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActionType")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("IssueId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<Guid?>("TeamId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IssueId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("ResolutionActions");
                 });
 
             modelBuilder.Entity("Issue.Domain.Entities.Issue.StatusHistory", b =>
@@ -437,7 +457,8 @@ namespace Issue.Persistence.Context.Migrations
                     b.Property<DateTime>("ChangedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ChangedById")
+                    b.Property<Guid?>("ChangedById")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -450,6 +471,12 @@ namespace Issue.Persistence.Context.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -460,51 +487,15 @@ namespace Issue.Persistence.Context.Migrations
                     b.ToTable("StatusHistories");
                 });
 
-            modelBuilder.Entity("Issue.Domain.Entities.ReadModels.ExpertInboxReadModel", b =>
-                {
-                    b.Property<Guid>("IssueId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("AssignedExpertId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("AssignedExpertName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ThumbnailUrl")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("IssueId");
-
-                    b.ToTable("ExpertInboxReadModels");
-                });
-
             modelBuilder.Entity("Issue.Domain.Entities.Issue.AiAnalysis", b =>
                 {
-                    b.HasOne("Issue.Domain.Entities.Issue.Issue", null)
-                        .WithMany("AiAnalyses")
-                        .HasForeignKey("IssueId");
+                    b.HasOne("Issue.Domain.Entities.Issue.IssueAttachment", "IssueAttachment")
+                        .WithOne("AiAnalysis")
+                        .HasForeignKey("Issue.Domain.Entities.Issue.AiAnalysis", "IssueAttachmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IssueAttachment");
                 });
 
             modelBuilder.Entity("Issue.Domain.Entities.Issue.Comment", b =>
@@ -602,32 +593,7 @@ namespace Issue.Persistence.Context.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Issue.Domain.Entities.Issue.MaintenanceTeam", "Team")
-                        .WithMany("RepairSchedules")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.Navigation("Issue");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("Issue.Domain.Entities.Issue.ResolutionActions", b =>
-                {
-                    b.HasOne("Issue.Domain.Entities.Issue.Issue", "Issue")
-                        .WithMany("ResolutionActions")
-                        .HasForeignKey("IssueId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Issue.Domain.Entities.Issue.MaintenanceTeam", "Team")
-                        .WithMany("ResolutionActions")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Issue");
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Issue.Domain.Entities.Issue.StatusHistory", b =>
@@ -649,8 +615,6 @@ namespace Issue.Persistence.Context.Migrations
 
             modelBuilder.Entity("Issue.Domain.Entities.Issue.Issue", b =>
                 {
-                    b.Navigation("AiAnalyses");
-
                     b.Navigation("Comments");
 
                     b.Navigation("ExpertReviews");
@@ -663,8 +627,6 @@ namespace Issue.Persistence.Context.Migrations
 
                     b.Navigation("RepairSchedule");
 
-                    b.Navigation("ResolutionActions");
-
                     b.Navigation("Shares");
 
                     b.Navigation("StatusHistory");
@@ -672,11 +634,9 @@ namespace Issue.Persistence.Context.Migrations
                     b.Navigation("Votes");
                 });
 
-            modelBuilder.Entity("Issue.Domain.Entities.Issue.MaintenanceTeam", b =>
+            modelBuilder.Entity("Issue.Domain.Entities.Issue.IssueAttachment", b =>
                 {
-                    b.Navigation("RepairSchedules");
-
-                    b.Navigation("ResolutionActions");
+                    b.Navigation("AiAnalysis");
                 });
 #pragma warning restore 612, 618
         }

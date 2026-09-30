@@ -10,8 +10,9 @@ namespace Issue.Shared.DTOS
     public  record  SubmitExpertReviewResponse(
         Guid ReviewId,
         Guid IssueId,
-        IssueStatus Status,
-        ReviewDecision Decision)
+        string Status,
+        string Notes,
+        string Decision)
     {
     }
 }

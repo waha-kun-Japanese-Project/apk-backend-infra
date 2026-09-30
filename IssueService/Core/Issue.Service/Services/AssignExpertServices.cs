@@ -2,22 +2,16 @@
 using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
-using Issue.Service.Concurrency;
-using Issue.Service.Specifications;
+using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS.AssignExpert;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Issue.Service.Services
 {
     public class AssignExpertServices(
-        IUnitOfWork unitOfWork, IMapper mapper,
-       ExpertAssignmentGate gate, IUserService userService ) : IAssignExpertServices
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+       IUserGrpcClient userGrpcClient ): IAssignExpertServices
     {
         public async Task<AssignExpertResponse> AssignExpertAsync(
             Guid issueId, AssignExpertRequest request,
@@ -29,19 +23,19 @@ namespace Issue.Service.Services
         public async Task<AssignExpertResponse> AutoAssignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)
         {
          
-          var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
+          //var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
 
-            var expert =(await  userService.GetExpertDetails()).ToDictionary(e => e.ExpertId, e => e.Name);
-            if (expert.Count == 0)
-            {
-                throw new InvalidOperationException("No experts available for assignment.");
-            }
-            return await gate.RunExclusiveAsync(async () =>
-            {
-                var expertId = await PickLeastBusyExpertAsync(expert.Keys, cancellationToken);
-                return await SetAssignedExpertAsync(issue, expertId, cancellationToken);
-            }, cancellationToken);
-
+          //  //var expert =(await  userService.GetExpertDetails()).ToDictionary(e => e.ExpertId, e => e.Name);
+          //  //if (expert.Count == 0)
+          //  //{
+          //  //    throw new InvalidOperationException("No experts available for assignment.");
+          //  //}
+          //  return await gate.RunExclusiveAsync(async () =>
+          //  {
+          //      var expertId = await PickLeastBusyExpertAsync(expert.Keys, cancellationToken);
+          //      return await SetAssignedExpertAsync(issue, expertId, cancellationToken);
+          //  }, cancellationToken);
+          throw new NotImplementedException("AutoAssignExpertAsync is not implemented yet.");
         }
 
         public async Task UnassignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)
@@ -54,7 +48,7 @@ namespace Issue.Service.Services
             }
 
             issue.AssignedExpertId = null;
-            issue.Status = IssueStatus.Verified;
+            issue.Status = IssueStatus.Diagnosed;
 
             repository.Update(issue);
             await unitOfWork.SaveChangesAsync(cancellationToken);

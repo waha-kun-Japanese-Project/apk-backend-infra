@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications.FarmerSpecifications;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using GetFarmerIssues = Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues;

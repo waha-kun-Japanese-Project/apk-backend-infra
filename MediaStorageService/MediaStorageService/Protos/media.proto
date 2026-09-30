@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option csharp_namespace = "MediaStorageService.Grpc";
+
+package media;
+
+service MediaGrpcService {
+    rpc UploadFile (UploadMediaRequest) returns (UploadMediaResponse);
+    rpc DeleteFile (DeleteMediaRequest) returns (DeleteMediaResponse);
+}
+
+message UploadMediaRequest {
+    bytes file_content = 1;
+    string file_name = 2;
+    string content_type = 3;
+    string folder = 4;
+}
+
+message UploadMediaResponse {
+    string file_name = 1;
+    string file_path = 2;
+    string file_url = 3;
+}
+
+message DeleteMediaRequest {
+    string object_name = 1;
+}
+
+message DeleteMediaResponse {
+    bool success = 1;
+}

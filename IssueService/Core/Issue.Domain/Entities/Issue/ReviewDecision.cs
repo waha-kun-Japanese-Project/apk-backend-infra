@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Issue.Domain.Entities.Issue
 {
-    public enum ReviewDecision
+    public enum 
+        ReviewDecision
     {
         ConfirmAi,
         Override

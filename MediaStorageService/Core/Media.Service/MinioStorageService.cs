@@ -72,27 +72,35 @@ namespace Media.Service
 
         public async Task<UploadFileResponse> UploadFileAsync(IFormFile file, string folder, CancellationToken cancellationToken = default)
         {
+            await using var stream = file.OpenReadStream();
+
+            return await UploadStreamAsync( new UploadStreamRequest( stream,file.FileName, file.ContentType,folder), cancellationToken);
+        }
+
+        public async Task<UploadFileResponse> UploadStreamAsync(UploadStreamRequest uploadStreamRequest, CancellationToken cancellationToken = default)
+        {
             var bucketExists = await client.BucketExistsAsync(
-                  new BucketExistsArgs().WithBucket(settings.BucketName), cancellationToken);
+                 new BucketExistsArgs().WithBucket(settings.BucketName), cancellationToken);
             if (!bucketExists)
             {
                 await client.MakeBucketAsync(
                     new MakeBucketArgs().WithBucket(settings.BucketName), cancellationToken);
             }
+                var fileName =  $"{Guid.NewGuid()}{Path.GetExtension(uploadStreamRequest.fileName)}";
 
-            var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var objectName = $"{folder}/{fileName}";
-            using var stream = file.OpenReadStream();
-            await client.PutObjectAsync(
-                new PutObjectArgs()
-                    .WithBucket(settings.BucketName)
-                    .WithObject(objectName)
-                    .WithStreamData(stream)
-                    .WithObjectSize(stream.Length)
-                    .WithContentType(file.ContentType),
-                cancellationToken);
+                var objectName = $"{uploadStreamRequest.folder}/{fileName}";
 
-            return new UploadFileResponse(fileName, objectName, $"{settings.Endpoint}/{settings.BucketName}/{objectName}");
+                await client.PutObjectAsync(
+                    new PutObjectArgs()
+                        .WithBucket(settings.BucketName)
+                        .WithObject(objectName)
+                        .WithStreamData(uploadStreamRequest.Stream)
+                        .WithContentType(uploadStreamRequest.contentType),
+                    cancellationToken);
+
+                return new UploadFileResponse( fileName, objectName,  $"{settings.Endpoint}/{settings.BucketName}/{objectName}");
+            }
+
         }
     }
-}
+

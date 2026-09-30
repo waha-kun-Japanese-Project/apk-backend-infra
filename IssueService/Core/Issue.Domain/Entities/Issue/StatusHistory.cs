@@ -15,7 +15,7 @@ namespace Issue.Domain.Entities.Issue
         public Guid IssueId { get; set; }
         public Issue Issue { get; set; } = null!;
 
-        public Guid ChangedById { get; set; } // User who changed the status
+        public Guid? ChangedById { get; set; } // User who changed the status
 
 
     }
