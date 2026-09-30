@@ -29,5 +29,9 @@
       <GrpcServices>Client</GrpcServices>
     </None>
   </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Grpc\Protos\media.proto"
+				  GrpcServices="Client" />
+	</ItemGroup>
 
 </Project>

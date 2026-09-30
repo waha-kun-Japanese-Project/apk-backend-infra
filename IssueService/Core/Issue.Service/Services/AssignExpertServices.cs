@@ -5,17 +5,13 @@ using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS.AssignExpert;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Issue.Service.Services
 {
     public class AssignExpertServices(
-        IUnitOfWork unitOfWork, IMapper mapper): IAssignExpertServices
+        IUnitOfWork unitOfWork,
+        IMapper mapper,
+       IUserGrpcClient userGrpcClient ): IAssignExpertServices
     {
         public async Task<AssignExpertResponse> AssignExpertAsync(
             Guid issueId, AssignExpertRequest request,

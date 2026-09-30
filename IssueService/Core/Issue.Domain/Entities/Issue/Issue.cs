@@ -12,6 +12,7 @@ namespace Issue.Domain.Entities.Issue
     {
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
+        public string ActionRepair { get; set; } = string.Empty;
         public string Type { get; set; } = string.Empty; // e.g. "leak", "distribution_problem"
         public IssueStatus Status { get; set; } = IssueStatus.Reported;
         public IssuePriority Priority { get; set; } = IssuePriority.Medium;

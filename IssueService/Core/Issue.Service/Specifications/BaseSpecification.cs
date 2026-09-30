@@ -17,6 +17,7 @@ namespace Issue.Service.Specifications
             Criteria = expression;
         }
         public ICollection<Expression<Func<TEntity, object>>> Includes { get;private set; } = [];
+        public ICollection<Func<IQueryable<TEntity>, IQueryable<TEntity>>> IncludeChains  { get; private set; } = [];
 
         public Expression<Func<TEntity, bool>> Criteria { get; private set; }
 
@@ -45,6 +46,10 @@ namespace Issue.Service.Specifications
         {
             Includes.Add(includeExpression);
            
+        }
+        protected void AddInclude( Func<IQueryable<TEntity>, IQueryable<TEntity>> includeExpression)
+        {
+            IncludeChains.Add(includeExpression);
         }
         protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
             OrderBy=ordertby;

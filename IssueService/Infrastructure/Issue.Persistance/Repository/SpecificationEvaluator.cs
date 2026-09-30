@@ -22,6 +22,11 @@ namespace Issue.Persistence.Repository
                 query = query.Include(include);
             }
 
+            foreach (var includeChain in specification.IncludeChains)
+            {
+                query = includeChain(query);
+            }
+
             //where filter 
 
             if (specification != null)
