@@ -1,5 +1,6 @@
 using Auth.Domain.Contracts;
 using Auth.Persistence.DependencyInjection;
+using Auth.Persistence.Context;
 using Auth.Service;
 using Auth.Service.DependanceInjection;
 using CommanLib.DependencyInjection;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auth_Services
 {
@@ -18,6 +20,7 @@ namespace Auth_Services
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             var firebasePath = Path.Combine(
                 builder.Environment.ContentRootPath,
                 "FireBase",
@@ -38,9 +41,18 @@ namespace Auth_Services
 
             var app = builder.Build();
 
-            var scape = app.Services.CreateScope();
-            var dbInitializer = scape.ServiceProvider.GetRequiredService<IDbInitializer>();
-            await dbInitializer.InitializeAsync();
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider
+                    .GetRequiredService<Microsoft.EntityFrameworkCore.DbContext>();
+
+                await db.Database.MigrateAsync();
+
+                var initializer = scope.ServiceProvider
+                    .GetRequiredService<IDbInitializer>();
+
+                await initializer.InitializeAsync();
+            }
 
             if (app.Environment.IsDevelopment())
             {
