@@ -28,8 +28,10 @@ namespace Userservices
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
-            app.UseAuthentication();
+            if (!app.Environment.IsProduction())
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseAuthorization();
 
             app.MapControllers();
