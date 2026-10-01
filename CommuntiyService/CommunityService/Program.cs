@@ -79,10 +79,8 @@ namespace CommunityService
                 app.UseSwaggerUI();
             }
 
-            if (!app.Environment.IsProduction())
-            {
-                app.UseHttpsRedirection();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseAuthentication();
             app.UseAuthorization();
 
