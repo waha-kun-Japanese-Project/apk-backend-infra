@@ -24,11 +24,15 @@ jobs:
           - service: reportservice
             dockerfile: ReportService/ReportService/Dockerfile
           - service: communityservice
-            dockerfile: CommuntiyService/CommunityService/Dockerfile   # folder name has a typo in the repo
+            dockerfile: CommunityService/CommunityService/Dockerfile   # folder name has a typo in the repo
           - service: mapservice
             dockerfile: MapService/Map/Dockerfile
           - service: notificationservice
             dockerfile: NotificationService/NotificationService/Dockerfile
+          - service: issueservice
+            dockerfile: IssueService/IssueService/Dockerfile
+          - service: usergrpcservice
+            dockerfile: UserService/gRPC/UserGrpcService/Dockerfile
     outputs:
       image_tag: ${{ steps.vars.outputs.image_tag }}
     steps:
@@ -81,9 +85,10 @@ jobs:
             [mediastorageservice]=media-storage-definition.yml
             [reportservice]=report-definition.yml
             [communityservice]=community-definition.yml
-            [dashboardservice]=dashboard-definition.yml
             [mapservice]=map-definition.yml
             [notificationservice]=notification-definition.yml
+            [issueservice]=issue-definition.yml
+            [issue.client]=issue-client-definition.yml
           )
           for svc in "${!FILES[@]}"; do
             f="${FILES[$svc]}"
