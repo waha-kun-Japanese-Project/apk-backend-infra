@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Auth.Persistence.Context
 {
-    internal class AppDbContext(DbContextOptions<AppDbContext> options) : 
+    public class AppDbContext(DbContextOptions<AppDbContext> options) :
         IdentityDbContext <AppUser,AppRole, Guid> (options)
 
     { 

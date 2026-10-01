@@ -6,12 +6,9 @@ using Auth.Service.DependanceInjection;
 using CommanLib.DependencyInjection;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Auth_Services
 {
@@ -34,6 +31,7 @@ namespace Auth_Services
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddTokenService(builder.Configuration);
             builder.Services.AddServices();
@@ -44,7 +42,7 @@ namespace Auth_Services
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider
-                    .GetRequiredService<DbContext>();
+                    .GetRequiredService<AppDbContext>();
 
                 await db.Database.MigrateAsync();
 
@@ -53,7 +51,6 @@ namespace Auth_Services
 
                 await initializer.InitializeAsync();
             }
-
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -62,11 +59,14 @@ namespace Auth_Services
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
+
+            app.MapHealthChecks("/health",
+                new HealthCheckOptions { Predicate = _ => false });
 
             app.Run();
         }
