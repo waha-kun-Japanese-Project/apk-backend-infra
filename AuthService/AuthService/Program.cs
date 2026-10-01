@@ -44,7 +44,7 @@ namespace Auth_Services
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider
-                    .GetRequiredService<Microsoft.EntityFrameworkCore.DbContext>();
+                    .GetRequiredService<DbContext>();
 
                 await db.Database.MigrateAsync();
 
