@@ -24,7 +24,7 @@ jobs:
           - service: reportservice
             dockerfile: ReportService/ReportService/Dockerfile
           - service: communityservice
-            dockerfile: CommunityService/CommunityService/Dockerfile   # folder name has a typo in the repo
+            dockerfile: CommuntiyService/CommunityService/Dockerfile   # folder name has a typo in the repo
           - service: mapservice
             dockerfile: MapService/Map/Dockerfile
           - service: notificationservice
