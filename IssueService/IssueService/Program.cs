@@ -2,16 +2,16 @@ using Issue.Client.DependencyInjection;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 
 namespace IssueService
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var builder = WebApplication.CreateBuilder(args);
-
             builder.Services.AddControllers();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddIssueClient(builder.Configuration);
@@ -21,6 +21,12 @@ namespace IssueService
             builder.Services.AddHealthChecks();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var issueDb = scope.ServiceProvider.GetRequiredService<Issue.Persistence.Context.IssueDbContext>();
+                await issueDb.Database.MigrateAsync();
+            }
 
             if (app.Environment.IsDevelopment())
             {
