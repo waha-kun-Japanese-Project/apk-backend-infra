@@ -27,7 +27,7 @@ namespace CommunityService
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Report Service API",
+                    Title = "Community Service API",
                     Version = "v1"
                 });
 

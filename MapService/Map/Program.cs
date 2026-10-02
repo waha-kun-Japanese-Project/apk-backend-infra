@@ -22,7 +22,7 @@ namespace Map
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Report Service API",
+                    Title = "Map Service API",
                     Version = "v1"
                 });
 

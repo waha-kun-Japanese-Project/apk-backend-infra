@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Report.Domain.Entities.Report;
 
 namespace Report.Service.Mapping
 {
@@ -15,5 +16,9 @@ namespace Report.Service.Mapping
                 : 0;
         }
 
+        internal static SeverityLevel ParseSeverity(string? severity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

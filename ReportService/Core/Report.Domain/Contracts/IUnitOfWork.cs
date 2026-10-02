@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Report.Domain.Contracts
 {
-    public  interface IUnitOfWork: IDisposable
+    public interface IUnitOfWork : IDisposable
     {
-        IIssueRepo issueRepo{ get; }
-
+        IIssueRepo issueRepo { get; }
         IIssueAttachmentRepo issueAttachmentRepo { get; }
+
+        IReportRepo reportRepo { get; }
+        IReportAttachmentRepo reportAttachmentRepo { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }
