@@ -12,16 +12,22 @@ namespace Report.Persistence.DependencyInjection
     {
         public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddDbContext<ReportDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
+            });
+
             services.AddDbContext<IssueDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
             });
+
             services.AddDbContext<AuthDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("AuthSqlConnection"));
             });
 
-            services.AddScoped<IIssueRepo,IssueRepo>();
+            services.AddScoped<IIssueRepo, IssueRepo>();
             services.AddScoped<IIssueAttachmentRepo, IssueAttachmentRepo>();
             services.AddScoped<IUnitOfWork, Unitofwork>();
 
