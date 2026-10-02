@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Report.Domain.Entities.Report;
+using System.Linq;
 using System.Reflection;
 
 namespace Report.Persistence.Context
@@ -13,7 +14,17 @@ namespace Report.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            // CHANGED: filtered the same way as IssueDbContext, for the same reason -
+            // this context happened to work before only because no Issue-namespace
+            // IEntityTypeConfiguration<T> existed yet. Scoping it explicitly means
+            // adding one later (e.g. an IssueAiAnalysisConfiguration) can never leak
+            // into this context's model by accident.
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                Assembly.GetExecutingAssembly(),
+                type => type.GetInterfaces().Any(i =>
+                    i.IsGenericType &&
+                    i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>) &&
+                    i.GetGenericArguments()[0].Namespace == "Report.Domain.Entities.Report"));
         }
    }
 }
