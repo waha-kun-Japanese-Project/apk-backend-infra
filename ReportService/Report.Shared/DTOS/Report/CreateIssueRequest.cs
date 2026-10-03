@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Report.Domain.Entities.Issue;
 using System;
 using System.Collections.Generic;
@@ -12,8 +12,8 @@ namespace Report.Shared.DTOS.Report
     string? Description,
     Guid ReporterId,
     IssuePriority Priority,
-  string Longitude,
-  string Latitude,
+   string? Longitude,
+   string? Latitude,
     Guid IssueAttachmentId
 
         )

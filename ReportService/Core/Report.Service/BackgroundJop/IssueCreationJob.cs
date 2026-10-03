@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Hangfire;
 using Report.Domain.Contracts;
 using Report.Domain.Entities.Issue;
@@ -18,6 +18,20 @@ namespace Report.Service.BackgroundJop
         public async Task CreateIssueAsync(CreateIssueRequest createIssueRequest)
         {
             var issue = mapper.Map<Issue>(createIssueRequest);
+
+            // Create the required GPSLocation for this issue
+            var gpsLocation = new GPSLocation
+            {
+                Latitude = createIssueRequest.Latitude ?? string.Empty,
+                Longitude = createIssueRequest.Longitude ?? string.Empty
+            };
+
+            unitOfWork
+                .GetRepository<GPSLocation, Guid>()
+                .Add(gpsLocation);
+
+            issue.GPSLocationId = gpsLocation.Id;
+            issue.GPSLocation = gpsLocation;
 
             unitOfWork
                 .GetRepository<Issue, Guid>()
