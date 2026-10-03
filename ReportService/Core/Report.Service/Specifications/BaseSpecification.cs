@@ -1,27 +1,25 @@
-﻿using Issue.Domain.Contract;
+﻿using Report.Domain.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-
-namespace Issue.Service.Specifications
+namespace Report.Service.Specifications
 {
-    public  class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity : class
+    public class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity : class
     {
         protected BaseSpecification(Expression<Func<TEntity, bool>> expression)
         {
             Criteria = expression;
         }
-        public ICollection<Expression<Func<TEntity, object>>> Includes { get;private set; } = [];
-        public ICollection<Func<IQueryable<TEntity>, IQueryable<TEntity>>> IncludeChains  { get; private set; } = [];
+        public ICollection<Expression<Func<TEntity, object>>> Includes { get; private set; } = [];
+        public ICollection<Func<IQueryable<TEntity>, IQueryable<TEntity>>> IncludeChains { get; private set; } = [];
 
         public Expression<Func<TEntity, bool>> Criteria { get; private set; }
 
-      
+
 
         public Expression<Func<TEntity, object>> OrderBy { get; private set; }
 
@@ -33,30 +31,30 @@ namespace Issue.Service.Specifications
 
         public bool IsPaginated { get; private set; }
 
-        protected void ApplyPagination (int Pageize,int PageIndex)
+        protected void ApplyPagination(int Pageize, int PageIndex)
         {
             IsPaginated = true;
             Skip = (PageIndex - 1) * Pageize;
-            Take= Pageize;
+            Take = Pageize;
 
         }
-           
+
 
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
         {
             Includes.Add(includeExpression);
-           
+
         }
-        protected void AddInclude( Func<IQueryable<TEntity>, IQueryable<TEntity>> includeExpression)
+        protected void AddInclude(Func<IQueryable<TEntity>, IQueryable<TEntity>> includeExpression)
         {
             IncludeChains.Add(includeExpression);
         }
-        protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
-            OrderBy=ordertby;
+        protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby) =>
+            OrderBy = ordertby;
 
 
-        protected void AddOrderByDesc(Expression<Func<TEntity, object>> expression)=>
-            OrderByDesc=expression;
+        protected void AddOrderByDesc(Expression<Func<TEntity, object>> expression) =>
+            OrderByDesc = expression;
 
 
 

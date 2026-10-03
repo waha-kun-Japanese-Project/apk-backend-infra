@@ -10,7 +10,7 @@ namespace Report.ServiceAbstraction
 {
     public  interface IIssueService
     {
-        Task<CreateIssueResponse> CreateIssueAsync(CreateIssueRequest request,CancellationToken cancellationToken=default );
+      //  Task<CreateIssueResponse> CreateIssueAsync(CreateIssueRequest request,CancellationToken cancellationToken=default );
 
         //Task<ReportDetailsResponse> GetIssueByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
@@ -18,8 +18,8 @@ namespace Report.ServiceAbstraction
 
         //Task<IEnumerable<ReportDetailsResponse>> GetMyIssuesAsync(CancellationToken cancellationToken = default);
 
-        Task<AiAnalysisResponse> AnalyzeIssueAsync(IFormFile photo, CancellationToken cancellationToken = default);
+     //   Task<AiAnalysisResponse> AnalyzeIssueAsync(IFormFile photo, CancellationToken cancellationToken = default);
 
-        Task DeleteIssueAsync(Guid id, CancellationToken cancellationToken = default);
+     //   Task DeleteIssueAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

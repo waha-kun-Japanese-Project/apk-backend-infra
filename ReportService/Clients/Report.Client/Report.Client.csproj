@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Google.Protobuf" Version="3.30.0" />
+	  <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+	  <PackageReference Include="Grpc.Tools" Version="2.57.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.3.0" />
     <PackageReference Include="Refit" Version="8.0.0" />
     <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
@@ -16,5 +22,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Report.Shared\Report.Shared.csproj" />
   </ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Protos\media.proto" GrpcServices="Client" />
+	</ItemGroup>
+
 
 </Project>
