@@ -14,7 +14,7 @@ public class IssueGPSLocationConfiguration : IEntityTypeConfiguration<GPSLocatio
 {
     public void Configure(EntityTypeBuilder<GPSLocation> builder)
     {
-        builder.ToTable("IssueGPSLocations");
+        builder.ToTable("GPSLocation");
 
         builder.HasKey(g => g.Id);
 

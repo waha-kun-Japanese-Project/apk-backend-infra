@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace Report.Persistence.Context
 {
+    // Connects to IssueDb (owned by IssueService). Never call Migrate() on this context.
     public class IssueDbContext(DbContextOptions<IssueDbContext> options) : DbContext(options)
     {
         public DbSet<Issue> Issues { get; set; } = null!;
@@ -14,26 +15,17 @@ namespace Report.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // CHANGED: was ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly())
-            // with no filter - that pulls in EVERY IEntityTypeConfiguration<T> in
-            // Report.Persistence, including AiAnalysisConfiguration and
-            // GPSLocationConfiguration, which both target the Report.Domain.Entities.Report
-            // versions of those classes, not the Report.Domain.Entities.Issue ones used
-            // here. Applying a configuration for an entity type adds that type to this
-            // context's model even if nothing else references it - so both the
-            // Report-namespace AiAnalysis/GPSLocation AND this context's own
-            // Issue-namespace AiAnalysis/GPSLocation ended up in the same model, both
-            // defaulting to the same table names ("AiAnalyses", "GPSLocations") with no
-            // relationship between them - EF's "shared table without a linking FK" error.
-            //
-            // This filters to only configurations whose configured entity type lives in
-            // the Issue namespace, so Report's configurations never leak in here.
+            // Only apply configurations for entities in the Issue namespace
             modelBuilder.ApplyConfigurationsFromAssembly(
                 Assembly.GetExecutingAssembly(),
                 type => type.GetInterfaces().Any(i =>
                     i.IsGenericType &&
                     i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>) &&
                     i.GetGenericArguments()[0].Namespace == "Report.Domain.Entities.Issue"));
+
+            // Table names must match what IssueService's migration created
+            modelBuilder.Entity<Issue>().ToTable("Issues");
+            modelBuilder.Entity<IssueAttachment>().ToTable("IssueAttachment");
         }
     }
 }

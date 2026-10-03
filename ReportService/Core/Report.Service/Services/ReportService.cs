@@ -69,7 +69,7 @@ namespace Report.Service.Services
             await using var stream = await storageClient.DownloadAsync(photoUrl);
 
             var prediction = await aiVisionClient.PredictAsync(
-                new StreamPart(stream, photoUrl, "image/jpeg"));
+    new StreamPart(stream, Path.GetFileName(photoUrl), "image/jpeg"));
 
             if (prediction.Status != "success")
             {

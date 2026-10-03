@@ -5,6 +5,7 @@ using Report.Client.DependencyInjection;
 using Report.Persistence.Context;
 using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
+using ReportService.Middleware;
 
 namespace ReportService
 {
@@ -16,7 +17,6 @@ namespace ReportService
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddTokenService(builder.Configuration);
             builder.Services.AddReportClient(builder.Configuration);
@@ -61,10 +61,11 @@ namespace ReportService
 
             using (var scope = app.Services.CreateScope())
             {
-                var reportDb = scope.ServiceProvider.GetRequiredService<Report.Persistence.Context.ReportDbContext>();
+                var reportDb = scope.ServiceProvider.GetRequiredService<ReportDbContext>();
                 await reportDb.Database.MigrateAsync();
-
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseSwagger();
             app.UseSwaggerUI();

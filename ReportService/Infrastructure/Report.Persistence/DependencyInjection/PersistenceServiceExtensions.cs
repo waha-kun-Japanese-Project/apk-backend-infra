@@ -17,11 +17,6 @@ namespace Report.Persistence.DependencyInjection
                 options.UseSqlServer(configuration.GetConnectionString("ReportSqlConnection"));
             });
 
-            services.AddDbContext<IssueDbContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
-            });
-
             services.AddDbContext<AuthDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("AuthSqlConnection"));

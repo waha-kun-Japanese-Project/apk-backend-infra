@@ -13,7 +13,7 @@ public class IssueAiAnalysisConfiguration : IEntityTypeConfiguration<AiAnalysis>
 {
     public void Configure(EntityTypeBuilder<AiAnalysis> builder)
     {
-        builder.ToTable("IssueAiAnalyses");
+        builder.ToTable("AiAnalysis");
 
         builder.HasKey(a => a.Id);
 
