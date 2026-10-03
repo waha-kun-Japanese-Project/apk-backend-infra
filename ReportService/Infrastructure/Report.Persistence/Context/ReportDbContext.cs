@@ -14,11 +14,7 @@ namespace Report.Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // CHANGED: filtered the same way as IssueDbContext, for the same reason -
-            // this context happened to work before only because no Issue-namespace
-            // IEntityTypeConfiguration<T> existed yet. Scoping it explicitly means
-            // adding one later (e.g. an IssueAiAnalysisConfiguration) can never leak
-            // into this context's model by accident.
+            
             modelBuilder.ApplyConfigurationsFromAssembly(
                 Assembly.GetExecutingAssembly(),
                 type => type.GetInterfaces().Any(i =>
