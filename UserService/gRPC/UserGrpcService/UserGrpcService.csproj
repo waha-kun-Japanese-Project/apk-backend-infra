@@ -10,6 +10,11 @@
     <Protobuf Include="Protos\user.proto" GrpcServices="Server" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Protobuf Include="Protos\Expert.proto" GrpcServices="Server" />
+	</ItemGroup>
+	
+
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.30.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />

@@ -11,5 +11,8 @@ namespace Issue.ServiceAbstraction.Farmer
     {
         Task<IEnumerable<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>>
             GetAllIssuesAsync(IssueFilteration issueFilteration,CancellationToken cancellationToken = default);
+         
+        Task<IEnumerable<GetFarmerIssues>>
+            GetAllIssuesByReporterIdAsync(GetFArmersIssuesParams issueFilteration,Guid reporterId, CancellationToken cancellationToken = default);
     }
 }
