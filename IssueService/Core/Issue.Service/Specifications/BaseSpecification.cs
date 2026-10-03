@@ -47,10 +47,7 @@ namespace Issue.Service.Specifications
             Includes.Add(includeExpression);
         }
 
-        protected void AddOrderBy(Expression<Func<TEntity, object>> orderByExpression)
-        {
-            IncludeChains.Add(includeExpression);
-        }
+     
         protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
             OrderBy=ordertby;
 

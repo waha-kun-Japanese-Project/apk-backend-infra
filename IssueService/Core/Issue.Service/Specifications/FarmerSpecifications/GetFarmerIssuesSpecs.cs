@@ -12,15 +12,15 @@ namespace Issue.Service.Specifications.FarmerSpecifications
         public GetFarmerIssuesSpecs(GetFArmersIssuesParams issuesParams) : base(p=> p.ReporterId == issuesParams.ReporterId.Value)
         
         {
-            if (issuesParams.status.HasValue)
-            {
-                AddCriteria(x => x.Status == issuesParams.status.Value);
-            }
+            //if (issuesParams.status.HasValue)
+            //{
+            //    AddCriteria(x => x.Status == issuesParams.status.Value);
+            //}
 
-            if (issuesParams.Critical.HasValue)
-            {
-                AddCriteria(x => x.Priority == issuesParams.Critical.Value);
-            }
+            //if (issuesParams.Critical.HasValue)
+            //{
+            //    AddCriteria(x => x.Priority == issuesParams.Critical.Value);
+            //}
             AddInclude(x => x.IssueAttachments);
             AddInclude(x => x.GPSLocation);
             AddOrderBy(x => x.CreatedAt);

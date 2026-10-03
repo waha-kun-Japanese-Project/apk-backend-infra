@@ -45,11 +45,11 @@ namespace Issue.Service.Specifications.ExpertSpecifications
 
         public IssueExpertInBoxSpecification(Guid id) : base(p=>p.Id==id)
         {
-            AddInclude(
-                (IQueryable<Domain.Entities.Issue.Issue> query) =>  query
-                        .Include(x => x.IssueAttachments)
-                        .ThenInclude(x => x.AiAnalysis)
-                        .AsQueryable());
+            //AddInclude(
+            //    (IQueryable<Domain.Entities.Issue.Issue> query) =>  query
+            //            .Include(x => x.IssueAttachments)
+            //            .ThenInclude(x => x.AiAnalysis)
+            //            .AsQueryable());
             AddInclude(p => p.GPSLocation);
             AddInclude(p=>p.ExpertReviews);
         }

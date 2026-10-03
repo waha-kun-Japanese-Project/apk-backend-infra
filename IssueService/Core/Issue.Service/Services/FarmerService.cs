@@ -3,13 +3,14 @@ using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications.FarmerSpecifications;
-using Issue.Client.ServiceAbstraction;
+
 using Issue.Shared.DTOS.FarmerDtos;
 using MassTransit.Initializers;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using GetFarmerIssues = Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues;
@@ -80,7 +81,7 @@ namespace Issue.Service.Services
             var result =  mapper.Map<IEnumerable<GetFarmerIssues>>(issues);
             var ExpertIds =  issues.Select( i => i.AssignedExpertId).Distinct().ToList();
 
-            var users = await userGrpcClient.GetExpertsByIdsAsync(ExpertIds, cancellationToken);
+            var users = await userGrpcClient.GetExpertsByIdsAsync((IEnumerable<Guid>)ExpertIds, cancellationToken);
             foreach (var dto in result)
             {
                 if (users.TryGetValue(dto.ExpertId, out var user))
