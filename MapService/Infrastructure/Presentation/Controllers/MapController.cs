@@ -2,11 +2,6 @@
 using Map.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Map.Presentation.Controllers
 {
@@ -17,30 +12,36 @@ namespace Map.Presentation.Controllers
         [HttpGet]
         [Authorize]
         [Route("ShowIssueInMap")]
-        public async Task<IEnumerable<MapResponseDto>> ShowIssueInMap( 
-            [FromQueryAttribute] int pageSize,
-            [FromQuery] int page,
-            CancellationToken cancellation)
+        public async Task<IEnumerable<MapResponseDto>> ShowIssueInMap(
+            [FromQuery] int pageSize = 20,
+            [FromQuery] int page = 1,
+            CancellationToken cancellation = default)
         {
-            var result = await mapService.ShowIssueInMapAsync(pageSize ,page ,cancellation);
-            return result;
+            pageSize = Math.Clamp(pageSize, 1, 100);
+            page = Math.Max(page, 1);
+            return await mapService.ShowIssueInMapAsync(pageSize, page, cancellation);
         }
+
         [HttpGet]
         [Authorize]
         [Route("SearchForIssueInMap")]
         public async Task<MapResponseDto> SearchForIssueInMap([FromQuery] Guid IssueId, CancellationToken cancellationToken)
         {
-            var result = await mapService.SearchForIssueInMapAsync(IssueId, cancellationToken);
-            return result;
+            return await mapService.SearchForIssueInMapAsync(IssueId, cancellationToken);
         }
+
         [HttpGet]
         [Authorize]
         [Route("SearchForIssueByTitleInMap")]
-        public async Task<IEnumerable<MapResponseDto>> SearchForIssueByTitleInMap([FromQuery] string title, [FromQuery] int pageSize, [FromQuery] int page, CancellationToken cancellationToken)
+        public async Task<IEnumerable<MapResponseDto>> SearchForIssueByTitleInMap(
+            [FromQuery] string title,
+            [FromQuery] int pageSize = 20,
+            [FromQuery] int page = 1,
+            CancellationToken cancellationToken = default)
         {
-            var result = await mapService.SearchForIssueByTitleInMapAsync(title, pageSize, page, cancellationToken);
-            return result;
+            pageSize = Math.Clamp(pageSize, 1, 100);
+            page = Math.Max(page, 1);
+            return await mapService.SearchForIssueByTitleInMapAsync(title, pageSize, page, cancellationToken);
         }
-
     }
 }
