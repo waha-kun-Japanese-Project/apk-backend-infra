@@ -14,7 +14,7 @@ namespace Report.Persistence.DependencyInjection
         {
             services.AddDbContext<ReportDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
+                options.UseSqlServer(configuration.GetConnectionString("ReportSqlConnection"));
             });
 
             services.AddDbContext<IssueDbContext>(options =>
@@ -29,6 +29,8 @@ namespace Report.Persistence.DependencyInjection
 
             services.AddScoped<IIssueRepo, IssueRepo>();
             services.AddScoped<IIssueAttachmentRepo, IssueAttachmentRepo>();
+            services.AddScoped<IReportRepo, ReportRepo>();
+            services.AddScoped<IReportAttachmentRepo, ReportAttachmentRepo>();
             services.AddScoped<IUnitOfWork, Unitofwork>();
 
             return services;

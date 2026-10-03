@@ -1,6 +1,8 @@
 using CommanLib.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
+using Report.Persistence.Context;
 using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
 
@@ -8,7 +10,7 @@ namespace ReportService
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,13 @@ namespace ReportService
             });
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var reportDb = scope.ServiceProvider.GetRequiredService<Report.Persistence.Context.ReportDbContext>();
+                await reportDb.Database.MigrateAsync();
+
+            }
 
             app.UseSwagger();
             app.UseSwaggerUI();
