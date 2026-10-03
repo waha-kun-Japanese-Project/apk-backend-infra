@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,5 @@ using System.Threading.Tasks;
 
 namespace Report.Shared.DTOS.Report
 {
-    public  record  AnalyzeIssueRequest(IFormFile Photo)
-    {
-    }
+    public record AnalyzeIssueRequest(IFormFile Photo, string? Latitude, string? Longitude);
 }

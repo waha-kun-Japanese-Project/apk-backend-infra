@@ -18,8 +18,7 @@ namespace Report.Persistence.DependencyInjection
             });
            
 
-            services.AddScoped<IIssueRepo,IssueRepo>();
-            services.AddScoped<IIssueAttachmentRepo, IssueAttachmentRepo>();
+     
             services.AddScoped<IUnitOfWork, Unitofwork>();
 
             return services;

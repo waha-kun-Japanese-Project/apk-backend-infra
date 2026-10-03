@@ -1,4 +1,5 @@
 using CommanLib.DependencyInjection;
+using Hangfire;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
 using Report.Persistence.DependencyInjection;
@@ -66,6 +67,7 @@ namespace ReportService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseHangfireDashboard("/hangfire");
 
             app.UseHttpsRedirection();
 
