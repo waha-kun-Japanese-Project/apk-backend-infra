@@ -13,7 +13,7 @@ namespace Issue.Client.Grpc.Services;
 
 public class UserGrpcClient(UserClinet.Grpc.UserService.UserServiceClient client,ExpertService.ExpertServiceClient Expertclient  ) : IUserGrpcClient
 {
-    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(IEnumerable<Guid> expertIds, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(List<Guid?> expertIds, CancellationToken cancellationToken = default)
     {
         var request = new GetExpertsRequest();
 
