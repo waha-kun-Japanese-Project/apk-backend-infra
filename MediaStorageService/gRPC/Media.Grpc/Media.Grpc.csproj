@@ -22,6 +22,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Media.ServiceAbstruction\Media.ServiceAbstraction.csproj" />
+      <ProjectReference Include="..\..\Core\Media.Service\Media.Service.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\Media.Settings\Media.Settings.csproj" />
     </ItemGroup>
 	<ItemGroup>
 		<Protobuf Include="Protos\media.proto" GrpcServices="Server" />

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Report.Domain.Contracts;
+using Report.Domain.Entities.Issue;
 using Report.Persistence.Context;
 using Report.Persistence.Repository;
 using System;
@@ -10,23 +11,27 @@ using System.Threading.Tasks;
 
 namespace Report.Persistence.UnitOfWork
 {
-    public class Unitofwork(IssueDbContext issueDb) : IUnitOfWork
+    public class Unitofwork(IssueDbContext dbContext) : IUnitOfWork
     {
-        public IIssueRepo issueRepo { get; }= new IssueRepo(issueDb);
+        private readonly Dictionary<string, object> repositories = [];
 
-        public IIssueAttachmentRepo issueAttachmentRepo { get; } = new IssueAttachmentRepo(issueDb);
+      
 
-    
-
-        public void Dispose()
+        public IRepository<TEntity, TKey> GetRepository<TEntity, TKey>() where TEntity : BaseEntity<TKey>
         {
-           issueDb.Dispose();
+            var type = typeof(TEntity).Name;
+            if (repositories.ContainsKey(type))
+                return (IRepository<TEntity, TKey>)repositories[type];
+
+            var repo = new Repository<TEntity, TKey>(dbContext);
+            repositories.Add(type, repo);
+            return repo;
         }
 
-        public async Task<int> SaveChangesAsync(
-       CancellationToken cancellationToken = default)
-        {
-            return await issueDb.SaveChangesAsync(cancellationToken);
-        }
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+       => await dbContext.SaveChangesAsync(cancellationToken);
+
+      
+
     }
 }
