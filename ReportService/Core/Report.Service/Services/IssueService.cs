@@ -124,7 +124,7 @@ public class IssueService(
             return;
 
         var createRequest = new CreateIssueRequest(
-            Title: prediction.ProblemCode,
+            Title: prediction.Problem ,
             Description: prediction.Explanation,
             ReporterId: GetLoggedInUserId(),
             Priority: priority,
