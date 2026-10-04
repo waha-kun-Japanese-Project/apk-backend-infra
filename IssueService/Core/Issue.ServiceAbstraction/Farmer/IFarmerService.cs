@@ -14,5 +14,6 @@ namespace Issue.ServiceAbstraction.Farmer
          
         Task<IEnumerable<GetFarmerIssues>>
             GetAllIssuesByReporterIdAsync(GetFArmersIssuesParams issueFilteration,Guid reporterId, CancellationToken cancellationToken = default);
+        Task<IssueTrackingResponseDto> GetIssueTrackingByIssueIdAsync(StatusParams status, CancellationToken cancellationToken = default);
     }
 }

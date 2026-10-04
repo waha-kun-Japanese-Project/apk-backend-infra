@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GetFarmerIssues = Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues;
+using System.Security.Claims;
 
 namespace Issue.Service.Services
 {
@@ -90,6 +91,22 @@ namespace Issue.Service.Services
                 }
             }
             return result;
+        }
+
+        public Task<IssueTrackingResponseDto> GetIssueTrackingByIssueIdAsync(StatusParams status, CancellationToken cancellationToken = default)
+        {
+            var IssueRepo = unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
+
+            var StatusHistroyRepo = unitOfWork.GetRepository<StatusHistory, Guid>();
+
+            var Issue = IssueRepo.GetByIdAsync(new GetIssueById(status.IssueID), cancellationToken);
+            if (Issue is null)
+            {
+                throw new KeyNotFoundException("Issue not found.");
+            }
+            var histroy = StatusHistroyRepo.GetAllAsync(new StatusSpecs(status.IssueID), cancellationToken);
+
+            throw new NotImplementedException();
         }
 
         private Guid GetLoggedInUserId()
