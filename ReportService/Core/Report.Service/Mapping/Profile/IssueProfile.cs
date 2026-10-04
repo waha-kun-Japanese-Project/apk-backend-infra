@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Report.Domain.Entities.Issue;
 using Report.Shared.DTOS.Client;
 using Report.Shared.DTOS.Report;
@@ -15,7 +15,7 @@ public class IssueProfile : Profile
         CreateMap<AiPredictionResponse, AiAnalysis>()
             .ForMember(
                 dest => dest.ProblemName,
-                opt => opt.MapFrom(src => src.ProblemCode))
+                opt => opt.MapFrom(src => src.Problem))
             .ForMember(
                 dest => dest.ProblemArabic,
                 opt => opt.MapFrom(src => src.Problem))
@@ -23,6 +23,12 @@ public class IssueProfile : Profile
                 dest => dest.Confidence,
                 opt => opt.MapFrom(src =>
                     AiAnalysisMapper.ParseConfidence(src.Confidence)))
+            .ForMember(
+                dest => dest.Severity,
+                opt => opt.MapFrom(src => src.Severity ?? "Unknown"))
+            .ForMember(
+                dest => dest.Recommendation,
+                opt => opt.MapFrom(src => src.Recommendation ?? string.Empty))
             .ForMember(
                 dest => dest.RepairSteps,
                 opt => opt.MapFrom(src =>
@@ -53,7 +59,7 @@ public class IssueProfile : Profile
                 opt => opt.Ignore())
             .ForMember(
                 dest => dest.ProblemName,
-                opt => opt.MapFrom(src => src.ProblemCode))
+                opt => opt.MapFrom(src => src.Problem))
             .ForMember(
                 dest => dest.ProblemArabic,
                 opt => opt.MapFrom(src => src.Problem))

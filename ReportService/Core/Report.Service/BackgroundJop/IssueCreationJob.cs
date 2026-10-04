@@ -1,25 +1,22 @@
 using AutoMapper;
 using Hangfire;
+using MassTransit;
 using Report.Domain.Contracts;
 using Report.Domain.Entities.Issue;
 using Report.Service.Specifications;
 using Report.ServiceAbstraction;
 using Report.Shared.DTOS.Report;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Report.Service.BackgroundJop
 {
-    public class IssueCreationJob(IUnitOfWork unitOfWork,IMapper mapper, IBackgroundJobClient  backgroundJobClient) : IIssueCreationJob
+    public class IssueCreationJob(IUnitOfWork unitOfWork,IMapper mapper, IBackgroundJobClient  backgroundJobClient,
+       IPublishEndpoint publishEndpoint) : IIssueCreationJob
     {
         public async Task CreateIssueAsync(CreateIssueRequest createIssueRequest)
         {
             var issue = mapper.Map<Issue>(createIssueRequest);
-
-            // Create the required GPSLocation for this issue
+            
             var gpsLocation = new GPSLocation
             {
                 Latitude = createIssueRequest.Latitude ?? string.Empty,
