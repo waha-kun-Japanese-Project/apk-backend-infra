@@ -13,6 +13,6 @@ namespace Issue.Service.Specifications.FarmerSpecifications
             AddInclude(x => x.IssueAttachments);
             AddInclude(x => x.GPSLocation);
         }
-    {
+    
     }
 }

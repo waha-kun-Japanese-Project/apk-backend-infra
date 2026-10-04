@@ -82,7 +82,7 @@ namespace Issue.Service.Services
             var result =  mapper.Map<IEnumerable<GetFarmerIssues>>(issues);
             var ExpertIds =  issues.Select( i => i.AssignedExpertId).Distinct().ToList();
 
-            var users = await userGrpcClient.GetExpertsByIdsAsync((IEnumerable<Guid>)ExpertIds, cancellationToken);
+            var users = await userGrpcClient.GetExpertsByIdsAsync(ExpertIds, cancellationToken);
             foreach (var dto in result)
             {
                 if (users.TryGetValue(dto.ExpertId, out var user))

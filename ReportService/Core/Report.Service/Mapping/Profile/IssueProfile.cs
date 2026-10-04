@@ -15,7 +15,7 @@ public class IssueProfile : Profile
         CreateMap<AiPredictionResponse, AiAnalysis>()
             .ForMember(
                 dest => dest.ProblemName,
-                opt => opt.MapFrom(src => src.ProblemCode))
+                opt => opt.MapFrom(src => src.ProblemCode ?? "UnKnown"))
             .ForMember(
                 dest => dest.ProblemArabic,
                 opt => opt.MapFrom(src => src.Problem))
