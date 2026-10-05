@@ -26,6 +26,7 @@ namespace Issue.Persistence.DependencyInjection
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+            services.AddScoped<ITransaction, Transaction>();
 
             return services;
         }

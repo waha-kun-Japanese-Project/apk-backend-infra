@@ -11,12 +11,12 @@ namespace Issue.Service.Specifications.ExpertSpecifications
     internal sealed class IssueExpertInBoxCountSpecification:BaseSpecification<Issue.Domain.Entities.Issue.Issue>
 
     {
-        public IssueExpertInBoxCountSpecification(IssueQueryParameters parameters)
-            : base(CreateCirteria(parameters)) { }
+        public IssueExpertInBoxCountSpecification(Guid expertid,IssueQueryParameters parameters)
+            : base(CreateCirteria(expertid, parameters)) { }
 
-             private static Expression<Func<Issue.Domain.Entities.Issue.Issue, bool>> CreateCirteria(IssueQueryParameters parameters)
+             private static Expression<Func<Issue.Domain.Entities.Issue.Issue, bool>> CreateCirteria(Guid expertid,IssueQueryParameters parameters)
         {
-            return p => (!p.AssignedExpertId.HasValue || p.AssignedExpertId == parameters.ExpertId);
+            return p => p.AssignedExpertId == expertid;
         }
 
     }

@@ -24,7 +24,7 @@ namespace Issue.Service.Services
         IMapper mapper) 
         : Issue.ServiceAbstraction.Farmer.IFarmerService
     {
-        public async Task<IEnumerable<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>> GetAllIssuesAsync(IssueFilteration issueFilteration,CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<GetIssuesREsponseDto>> GetAllIssuesAsync(IssueFilteration issueFilteration,CancellationToken cancellationToken = default)
         {
                 var repo = unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
                 var CommentRepo = unitOfWork.GetRepository<Comment, Guid>();

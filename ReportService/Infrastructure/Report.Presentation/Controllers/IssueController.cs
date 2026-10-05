@@ -12,6 +12,7 @@ namespace Report.Presentation.Controllers
     public class IssueController(IIssueService issueService) : ControllerBase
     {
         [HttpPost("analyze")]
+        [Authorize(Roles = "Farmer")]
         public async Task<ActionResult<AiAnalysisResponse>> AnalyzeReport(
             [FromForm] AnalyzeIssueRequest analyze,
             CancellationToken cancellationToken)

@@ -1,6 +1,10 @@
+using CommanLib.DependencyInjection;
+using Hangfire;
 using Issue.Client.DependencyInjection;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
+using Issue.Service.Jop;
+using Microsoft.OpenApi.Models;
 using UserClinet.Grpc;
 
 namespace IssueService
@@ -28,8 +32,50 @@ namespace IssueService
             builder.Services.AddServiced(
                 builder.Configuration);
 
+            //token jwt
+            builder.Services.AddTokenService(builder.Configuration);
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Issue Service API",
+                    Version = "v1"
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter JWT Token.\n\nExample:\nBearer eyJhbGciOiJIUzI1NiIs..."
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+            });
+
+
 
             var app = builder.Build();
 
@@ -38,13 +84,25 @@ namespace IssueService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager =
+                    scope.ServiceProvider
+                        .GetRequiredService<IRecurringJobManager>();
+
+                recurringJobManager.AddOrUpdate<ExpertAssignmentReconciliationJob>(
+                    "expert-assignment-reconciliation",
+                    job => job.ExecuteAsync(),
+                    "*/20 * * * *");
+            }
 
             app.Run();
         }

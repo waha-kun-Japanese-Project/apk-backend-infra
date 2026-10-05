@@ -12,8 +12,8 @@ namespace Issue.Service.Specifications.ExpertSpecifications
 {
     internal class IssueExpertInBoxSpecification:BaseSpecification<Domain.Entities.Issue.Issue>
     {
-        public IssueExpertInBoxSpecification(IssueQueryParameters parameters )
-            :base(CreateCirteria(parameters))
+        public IssueExpertInBoxSpecification(Guid expertid ,IssueQueryParameters parameters )
+            :base(CreateCirteria(expertid, parameters))
         {
              Sort (parameters);
             ApplyPagination(parameters.PageSize, parameters.pageIndex);
@@ -38,20 +38,21 @@ namespace Issue.Service.Specifications.ExpertSpecifications
             }
 
         }
-        private static  Expression<Func<Domain.Entities.Issue.Issue,bool>> CreateCirteria (IssueQueryParameters parameters)
+        private static  Expression<Func<Domain.Entities.Issue.Issue,bool>> CreateCirteria (Guid expertid ,IssueQueryParameters parameters)
         {
-            return p => !p.AssignedExpertId.HasValue || p.AssignedExpertId == parameters.ExpertId;
+            return  p => p.AssignedExpertId == expertid;
         }
 
         public IssueExpertInBoxSpecification(Guid id) : base(p=>p.Id==id)
         {
-            //AddInclude(
-            //    (IQueryable<Domain.Entities.Issue.Issue> query) =>  query
-            //            .Include(x => x.IssueAttachments)
-            //            .ThenInclude(x => x.AiAnalysis)
-            //            .AsQueryable());
-            AddInclude(p => p.GPSLocation);
-            AddInclude(p=>p.ExpertReviews);
+            AddIncludeChain(query =>
+            query
+                .Include(x => x.IssueAttachments)
+                .ThenInclude(x => x.AiAnalysis));
+
+            AddInclude(x => x.GPSLocation);
+
+            AddInclude(x => x.ExpertReviews);
         }
     }
 }

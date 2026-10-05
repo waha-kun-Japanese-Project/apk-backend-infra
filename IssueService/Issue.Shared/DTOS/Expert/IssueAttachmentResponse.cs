@@ -1,4 +1,4 @@
-﻿using Issue.Domain.Entities.Issue;
+using Issue.Domain.Entities.Issue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Issue.Shared.DTOS
 {
-    public record IssueAttachmentResponse(
-        Guid Id,
-        IssueAttachmentType Type,
-        string Url
-    );
+    public record IssueAttachmentResponse
+    {
+        public Guid Id { get; init; }
+        public IssueAttachmentType Type { get; init; }
+        public string Url { get; init; } = string.Empty;
+    }
 }

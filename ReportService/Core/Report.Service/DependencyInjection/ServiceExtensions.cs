@@ -1,4 +1,5 @@
 using Hangfire;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Report.Service.BackgroundJop;
@@ -30,8 +31,15 @@ namespace Report.Service.DependencyInjection
 
             // Server: the background worker that actually executes jobs
            services.AddHangfireServer();
-
-            return services;
+            services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host("localhost", "/", h =>
+                {
+                    h.Username("guest");
+                    h.Password("guest");
+                });
+            })); 
+                return services;
         }
     }
 }

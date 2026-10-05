@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Issue.Domain.Entities.Issue;
 using Issue.Shared.DTOS;
 using Issue.Service.Specifications.FarmerSpecifications;
@@ -25,11 +25,16 @@ namespace Issue.Service.MapperingProfiles
                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.IssueAttachments.Select(x => x.Url)))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
 
-
             CreateMap<Issue.Domain.Entities.Issue.Issue, AssignExpertResponse>()
-               .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.Id))
-               .ForMember(dest => dest.AssignedExpertId, opt => opt.MapFrom(src => src.AssignedExpertId))
-               .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(
+                    dest => dest.IssueId,
+                    opt => opt.MapFrom(src => src.Id))
+                .ForMember(
+                    dest => dest.AssignedExpertId,
+                    opt => opt.MapFrom(src => src.AssignedExpertId!.Value))
+                .ForMember(
+                    dest => dest.Status,
+                    opt => opt.MapFrom(src => src.Status.ToString()));
 
             CreateMap<Issue.Domain.Entities.Issue.Issue, ExpertInboxResponse>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
@@ -38,24 +43,34 @@ namespace Issue.Service.MapperingProfiles
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(opt => opt.Status.ToString()))
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
                 .ForMember(dest=>dest.AssignedExpertId,opt=>opt.MapFrom(src=>src.AssignedExpertId));
-              
 
 
-            CreateMap <Issue.Domain.Entities.Issue.Issue, CaseReviewResponse>()
-                .ForMember(dest => dest.Status,
-                      opt => opt.MapFrom(src => src.Status.ToString()))
-                .ForMember(dest => dest.Priority,
-                      opt => opt.MapFrom(src => src.Priority.ToString()))
-                .ForMember(dest => dest.Latitude,
-                      opt => opt.MapFrom(src => src.GPSLocation.Latitude.ToString()))
-               .ForMember(dest => dest.Longitude,
-                      opt => opt.MapFrom(src => src.GPSLocation.Longitude.ToString()))
-               .ForMember(dest => dest.Attachments,
-                      opt => opt.MapFrom(src => src.IssueAttachments))
-              //.ForMember(dest => dest.AiAnalysis,
-              //        opt => opt.MapFrom(src => src.AiAnalyses))
-              .ForMember(dest => dest.ExpertReviews,
-                      opt => opt.MapFrom(src => src.ExpertReviews));
+
+            CreateMap<Issue.Domain.Entities.Issue.Issue, CaseReviewResponse>()
+     .ForMember(dest => dest.Status,
+         opt => opt.MapFrom(src => src.Status.ToString()))
+
+     .ForMember(dest => dest.Priority,
+         opt => opt.MapFrom(src => src.Priority.ToString()))
+
+     .ForMember(dest => dest.Latitude,
+         opt => opt.MapFrom(src => src.GPSLocation.Latitude.ToString()))
+
+     .ForMember(dest => dest.Longitude,
+         opt => opt.MapFrom(src => src.GPSLocation.Longitude.ToString()))
+
+     .ForMember(dest => dest.Attachments,
+         opt => opt.MapFrom(src => src.IssueAttachments))
+
+     .ForMember(dest => dest.AiAnalysis,
+         opt => opt.MapFrom(src =>
+             src.IssueAttachments
+                 .Where(x => x.AiAnalysis != null)
+                 .Select(x => x.AiAnalysis)
+                 .FirstOrDefault()))
+
+     .ForMember(dest => dest.ExpertReviews,
+         opt => opt.MapFrom(src => src.ExpertReviews));
 
 
             CreateMap<IssueAttachment, IssueAttachmentResponse>();
@@ -71,14 +86,15 @@ namespace Issue.Service.MapperingProfiles
                 .ForMember(dest => dest.Decision, opt => opt.MapFrom(src => src.Decision.ToString()))
                 .ForMember(dest =>dest.Notes,opt=>opt.MapFrom(src=>src.Notes));
 
-            CreateMap<RepairSchedule, RepairScheduleResponse>();
+            CreateMap<RepairSchedule, RepairScheduleResponse>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Issue.Status.ToString()));
                
             CreateMap<Issue.Domain.Entities.Issue.Issue, Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues>()
                  .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
                  .ForMember(dest => dest.SlotStart, opt => opt.MapFrom(src => src.RepairSchedule.SlotStart))
                  .ForMember(dest => dest.SlotEnd, opt => opt.MapFrom(src => src.RepairSchedule.SlotEnd))
                  .ForMember(dest => dest.SceduleDate, opt => opt.MapFrom(src => src.RepairSchedule.ScheduledDate));

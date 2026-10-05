@@ -1,4 +1,5 @@
 using AutoMapper;
+using CommanLib.EventNotification.IssueEvent;
 using Hangfire;
 using MassTransit;
 using Report.Domain.Contracts;
@@ -40,7 +41,24 @@ namespace Report.Service.BackgroundJop
 
             attachment.IssueId = issue.Id;
          attachmentrepo.Update(attachment);
+            ChangeStatus(issue, issue.Status);  
            await unitOfWork.SaveChangesAsync();
+
+
+              await publishEndpoint.Publish(new IssueCreatedEvent(issue.Id));
+        }
+
+        private void ChangeStatus(Issue issue , IssueStatus status)
+        {
+            issue.Status = status;
+
+            unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
+            {
+                IssueId = issue.Id,
+                Status = status,
+                ChangedById = null,
+                Note = $"Issue {status} by system"
+            });
         }
     }
 }
