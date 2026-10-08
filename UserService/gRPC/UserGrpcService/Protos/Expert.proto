@@ -4,7 +4,7 @@ option csharp_namespace = "ExpertService.Grpc";
 
 package user;
 
-service GrpcService {
+service ExpertService {
     rpc GetExpertsByIds (GetExpertsRequest)
         returns (GetExpertsResponse);
 }

@@ -1,8 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using User.Persistence.Context;
-using UserGrpcService.Services;
+using ExpertGrpcService.Services;
 
-namespace UserGrpcService
+namespace ExpertGrpcService
 {
     public class Program
     {
@@ -12,14 +10,13 @@ namespace UserGrpcService
 
             // Add services to the container.
             builder.Services.AddGrpc();
-            builder.Services.AddDbContext<AppDbContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            app.MapGrpcService<UserGRPsService>();
+            app.MapGrpcService<GreeterService>();
             app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
-            app.MapGrpcService<ExpertGrpcService>();
+
             app.Run();
         }
     }
