@@ -1,6 +1,7 @@
 ﻿
 using Issue.Service.Services;
 using Issue.ServiceAbstraction.Expert;
+using Issue.ServiceAbstraction.Farmer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -20,6 +21,7 @@ namespace Issue.Service.DependencyInjection
 
             services.AddScoped<IExpertService, ExpertService>();
             services.AddScoped<IAssignExpertServices, AssignExpertServices>();
+            services.AddScoped<IFarmerService, FarmerService>();
            
             return services;
         }

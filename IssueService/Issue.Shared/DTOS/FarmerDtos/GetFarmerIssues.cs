@@ -14,13 +14,12 @@ namespace Issue.Shared.DTOS.FarmerDtos
         public string Description { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public IssueStatus Status { get; set; }
-        public TimeOnly? SlotStart { get; set; }
-        public TimeOnly? SlotEnd { get; set; }
-        public DateTime? SceduleDate { get; set; }
+        public IssuePriority priority { get; set; }
+        public string longitude { get; set; }
+        public string Latiude { get; set; }
         public Guid ReporterId { get; set; }
         public string ExpertName { get; set; } = null!;
         public string ExpertUrl { get; set; }
         public Guid ExpertId { get; set; }
-        public string? TeamName { get; set; }
     }
 }

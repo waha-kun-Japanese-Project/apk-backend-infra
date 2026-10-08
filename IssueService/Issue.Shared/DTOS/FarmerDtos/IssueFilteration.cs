@@ -12,6 +12,5 @@ namespace Issue.Shared.DTOS.FarmerDtos
         public IssueStatus? Completed { get; set; } = IssueStatus.completed;
         public IssuePriority? Critical { get; set; } = IssuePriority.Critical;
         public IssueStatus? Assigend { get; set; } = IssueStatus.Assigned;
-        public Guid? ReporterId{ get; set; }
     }
 }

@@ -93,16 +93,13 @@ public class ExpertService(
             new IssueExpertInBoxSpecification(parameters),
             cancellationToken);
 
-        if (!issues.Any())
-            throw new KeyNotFoundException("No issues were found.");
-
         var data = mapper.Map<IEnumerable<ExpertInboxResponse>>(issues);
-
+        var pageCount = (int)Math.Ceiling((double)data.Count() / parameters.PageSize);
         var totalCount = await repository.CountAsync(
             new IssueExpertInBoxCountSpecification(parameters),
             cancellationToken);
 
-        return new(parameters.pageIndex, data.Count(), totalCount,data);
+        return new(parameters.pageIndex, pageCount, totalCount,data);
     }
 
     public async Task<ResolutionActionResponse> CreateResolutionActionAsync(

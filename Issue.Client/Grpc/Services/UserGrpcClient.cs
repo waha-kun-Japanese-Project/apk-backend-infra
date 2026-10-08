@@ -11,7 +11,7 @@ using UserService.Grpc;
 
 namespace Issue.Client.Grpc.Services;
 
-public class UserGrpcClient(UserClinet.Grpc.UserService.UserServiceClient client,ExpertService.ExpertServiceClient Expertclient  ) : IUserGrpcClient
+public class UserGrpcClient(UserClinet.Grpc.UserGRPcService.UserGRPcServiceClient client,ExpertService.ExpertServiceClient Expertclient  ) : IUserGrpcClient
 {
     public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(List<Guid?> expertIds, CancellationToken cancellationToken = default)
     {

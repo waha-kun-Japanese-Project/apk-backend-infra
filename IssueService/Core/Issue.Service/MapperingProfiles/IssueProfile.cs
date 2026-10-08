@@ -73,16 +73,17 @@ namespace Issue.Service.MapperingProfiles
                 .ForMember(dest =>dest.Notes,opt=>opt.MapFrom(src=>src.Notes));
 
             CreateMap<RepairSchedule, RepairScheduleResponse>();
-               
+
             CreateMap<Issue.Domain.Entities.Issue.Issue, Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues>()
                  .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
-                 .ForMember(dest => dest.SlotStart, opt => opt.MapFrom(src => src.RepairSchedule.SlotStart))
-                 .ForMember(dest => dest.SlotEnd, opt => opt.MapFrom(src => src.RepairSchedule.SlotEnd))
-                 .ForMember(dest => dest.SceduleDate, opt => opt.MapFrom(src => src.RepairSchedule.ScheduledDate));
+                 .ForMember(dest => dest.longitude , opt => opt.MapFrom(src => src.GPSLocation.Longitude))
+                 .ForMember(dest => dest.Latiude, opt => opt.MapFrom(src => src.GPSLocation.Latitude))
+                 .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
+                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+           
 
             CreateMap<StatusHistory, IssueTrackingStepDto>()
                 .ForMember(
@@ -96,9 +97,16 @@ namespace Issue.Service.MapperingProfiles
                     opt => opt.MapFrom(src => src.Note))
                 .ForMember(
                     dest => dest.Name,
-                    opt => opt.MapFrom(src => GetStatusName(src.Status)));
+                    opt => opt.MapFrom(src => GetStatusName(src.Status).ToString()));
 
-     
+            CreateMap<StatusHistory,CompleteStausReponse>()
+                .ForMember(dest => dest.status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.IssueId))
+                .ForMember(dest => dest.ChangedAt , opt => opt.MapFrom(src => src.ChangedAt))
+                .ForMember(dest => dest.ReporterId , opt=> opt.MapFrom(src=>src.ChangedById));
+
+
+
         }
         private static string GetStatusName(IssueStatus status)
         {
