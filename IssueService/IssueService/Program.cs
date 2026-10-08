@@ -2,6 +2,7 @@ using CommanLib.DependencyInjection;
 using Issue.Client.DependencyInjection;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
+using Issue.Service.Jop;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using UserClinet.Grpc;
@@ -40,7 +41,7 @@ namespace IssueService
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Report Service API",
+                    Title = "Issue Service API",
                     Version = "v1"
                 });
 
@@ -77,13 +78,25 @@ namespace IssueService
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager =
+                    scope.ServiceProvider
+                        .GetRequiredService<IRecurringJobManager>();
+
+                recurringJobManager.AddOrUpdate<ExpertAssignmentReconciliationJob>(
+                    "expert-assignment-reconciliation",
+                    job => job.ExecuteAsync(),
+                    "*/20 * * * *");
+            }
 
             app.Run();
         }

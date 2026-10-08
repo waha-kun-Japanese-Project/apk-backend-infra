@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CommanLib\CommanLib\CommanLib.csproj" />
     <ProjectReference Include="..\..\Clients\Report.Client\Report.Client.csproj" />
     <ProjectReference Include="..\Report.ServiceAbstraction\Report.ServiceAbstraction.csproj" />
   </ItemGroup>

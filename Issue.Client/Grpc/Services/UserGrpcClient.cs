@@ -1,4 +1,5 @@
-﻿using Grpc.Core;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using GrpcUserClient.DTOS;
 using Issue.Client.ServiceAbstraction;
 using System;
@@ -13,7 +14,23 @@ namespace Issue.Client.Grpc.Services;
 
 public class UserGrpcClient(UserClinet.Grpc.UserGRPcService.UserGRPcServiceClient client,ExpertService.ExpertServiceClient Expertclient  ) : IUserGrpcClient
 {
-    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(List<Guid?> expertIds, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<Guid>> GetAllExpertIdsAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await Expertclient.GetAllExpertAsync(new Empty(),cancellationToken: cancellationToken);
+        var expertIds = new List<Guid>();
+
+        foreach (var id in response.ExpertIds)
+        {
+            if (Guid.TryParse(id, out var expertId))
+            {
+                expertIds.Add(expertId);
+            }
+        }
+
+        return expertIds;
+    }
+
+    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(IEnumerable<Guid> expertIds, CancellationToken cancellationToken = default)
     {
         var request = new GetExpertsRequest();
 

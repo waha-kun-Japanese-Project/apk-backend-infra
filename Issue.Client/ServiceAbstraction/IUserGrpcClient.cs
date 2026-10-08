@@ -18,4 +18,7 @@ public interface IUserGrpcClient
       GetExpertsByIdsAsync(
           List<Guid?> expertIds,
           CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyCollection<Guid>> GetAllExpertIdsAsync(
+        CancellationToken cancellationToken = default);
 }

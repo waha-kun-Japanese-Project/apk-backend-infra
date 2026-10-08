@@ -36,7 +36,7 @@ namespace Issue.Client.DependencyInjection
             services.AddGrpcClient<MediaStorage.MediaStorageClient>(options =>
             {
                 options.Address = new Uri(
-                    configuration["Grpc:MediaStorage"]!);
+                    configuration["Grpc:MediaStorageUrl"]!);
             });
 
 

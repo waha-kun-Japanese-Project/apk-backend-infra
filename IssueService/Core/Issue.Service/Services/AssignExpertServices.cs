@@ -5,13 +5,15 @@ using Issue.Domain.Entities.Issue;
 using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.ServiceAbstraction.Expert;
 using Issue.Shared.DTOS.AssignExpert;
+using System.Data;
 
 namespace Issue.Service.Services
 {
     public class AssignExpertServices(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-       IUserGrpcClient userGrpcClient ): IAssignExpertServices
+       IUserGrpcClient userGrpcClient,
+       ITransaction _transaction) : IAssignExpertServices
     {
         public async Task<AssignExpertResponse> AssignExpertAsync(
             Guid issueId, AssignExpertRequest request,
@@ -22,20 +24,39 @@ namespace Issue.Service.Services
 
         public async Task<AssignExpertResponse> AutoAssignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)
         {
-         
-          //var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
+            var expertids = await userGrpcClient.GetAllExpertIdsAsync(cancellationToken);
+            if (expertids.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "No experts are currently available.");
+            }
 
-          //  //var expert =(await  userService.GetExpertDetails()).ToDictionary(e => e.ExpertId, e => e.Name);
-          //  //if (expert.Count == 0)
-          //  //{
-          //  //    throw new InvalidOperationException("No experts available for assignment.");
-          //  //}
-          //  return await gate.RunExclusiveAsync(async () =>
-          //  {
-          //      var expertId = await PickLeastBusyExpertAsync(expert.Keys, cancellationToken);
-          //      return await SetAssignedExpertAsync(issue, expertId, cancellationToken);
-          //  }, cancellationToken);
-          throw new NotImplementedException("AutoAssignExpertAsync is not implemented yet.");
+            await using var transaction = await _transaction.BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
+            await _transaction.AcquireLockAsync("WAHAKUN_Expert_Assignment", 10_000, cancellationToken);
+
+            var issue = await GetIssueOrThrowAsync(issueId, cancellationToken);
+
+            if (issue.AssignedExpertId.HasValue)
+            {
+                await transaction.CommitAsync(
+                    cancellationToken);
+                return mapper.Map<AssignExpertResponse>(issue);
+
+            }
+
+            var expertId = await PickLeastBusyExpertAsync(  expertids,  cancellationToken);
+
+         
+            issue.AssignedExpertId = expertId;
+            issue.Status = IssueStatus.Assigned;
+
+            var response =await SetAssignedExpertAsync(issue, expertId, cancellationToken);
+        
+            await transaction.CommitAsync(cancellationToken);
+
+           
+            return response;
+
         }
 
         public async Task UnassignExpertAsync(Guid issueId, CancellationToken cancellationToken = default)
@@ -84,6 +105,7 @@ namespace Issue.Service.Services
             issue.Status = IssueStatus.Assigned;
 
             repository.Update(issue);
+          ChangeStatus(issue, issue.Status);
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
             return mapper.Map<AssignExpertResponse>(issue);
@@ -116,7 +138,20 @@ namespace Issue.Service.Services
             return issue ?? throw new KeyNotFoundException($"Issue '{issueId}' was not found.");
         }
 
+        private void ChangeStatus(
+       Issue.Domain.Entities.Issue.Issue issue,
+       IssueStatus status)
+        {
+            issue.Status = status;
 
+            unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
+            {
+                IssueId = issue.Id,
+                Status = status,
+                ChangedById = null,
+                Note = $"Issue {status} by system"
+            });
+        }
 
     }
 }

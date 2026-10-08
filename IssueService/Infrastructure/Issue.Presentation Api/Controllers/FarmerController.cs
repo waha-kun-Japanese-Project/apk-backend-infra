@@ -2,6 +2,7 @@
 using Issue.ServiceAbstraction.Farmer;
 using Issue.Shared.DTOS.FarmerDtos;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -17,6 +18,7 @@ namespace Issue.Presentation_Api.Controllers
     public class FarmerController(IFarmerService farmerService): ControllerBase
     {
         [HttpGet("issues")]
+        [Authorize(Roles = "Farmer")]
         [Authorize]
 
         public async Task<IActionResult> GetAllIssuesAsync([FromQuery] IssueFilteration issueFilteration, CancellationToken cancellationToken = default)
@@ -25,6 +27,8 @@ namespace Issue.Presentation_Api.Controllers
             return Ok(issues);
         }
         [HttpGet("issues/{reporterId}")]
+        [Authorize(Roles = "Farmer")]
+        public async Task<IActionResult> GetAllIssuesByReporterIdAsync([FromQuery] GetFArmersIssuesParams issueFilteration, Guid reporterId, CancellationToken cancellationToken = default)
         [Authorize]
 
         public async Task<IActionResult> GetAllIssuesByReporterIdAsync([FromQuery] IssueFilteration issueFilteration,CancellationToken cancellationToken = default)

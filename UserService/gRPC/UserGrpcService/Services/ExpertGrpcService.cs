@@ -1,5 +1,8 @@
 ﻿using ExpertService.Grpc;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using User.Persistence.Context;
@@ -14,7 +17,31 @@ public class ExpertGrpcService : ExpertService.Grpc.ExpertService.ExpertServiceB
     {
         _context = context;
     }
+    public override async Task<ExpertIdsRespone> GetAllExpert(Empty request, ServerCallContext context)
+    {
+        var expertIds = await(
+           from user in _context.Users
 
+           join userRole in _context.UserRoles
+               on user.Id equals userRole.UserId
+
+           join role in _context.Roles
+               on userRole.RoleId equals role.Id
+
+           where role.Name == "EXPERT"
+
+           select user.Id
+       )
+       .ToListAsync(context.CancellationToken);
+
+        var response = new ExpertIdsRespone();
+        
+        response.ExpertIds.AddRange(
+                    expertIds.Select(id => id.ToString()));
+
+
+        return response;
+    }
     public override async Task<GetExpertsResponse> GetExpertsByIds(
         GetExpertsRequest request,
         ServerCallContext context)

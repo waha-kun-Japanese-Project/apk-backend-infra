@@ -87,16 +87,17 @@ public class ExpertService(
         IssueQueryParameters parameters,
         CancellationToken cancellationToken)
     {
+        var expertid = GetLoggedInUserId();
         var repository =unitOfWork. GetRepository<Issue.Domain.Entities.Issue.Issue,Guid>();
 
         var issues = await repository.GetAllAsync(
-            new IssueExpertInBoxSpecification(parameters),
+            new IssueExpertInBoxSpecification(expertid, parameters),
             cancellationToken);
 
         var data = mapper.Map<IEnumerable<ExpertInboxResponse>>(issues);
         var pageCount = (int)Math.Ceiling((double)data.Count() / parameters.PageSize);
         var totalCount = await repository.CountAsync(
-            new IssueExpertInBoxCountSpecification(parameters),
+            new IssueExpertInBoxCountSpecification(expertid, parameters),
             cancellationToken);
 
         return new(parameters.pageIndex, pageCount, totalCount,data);
@@ -129,19 +130,25 @@ public class ExpertService(
             Purpose = IssueAttachmentPurpose.RepairProof
         };
 
-      unitOfWork.GetRepository<IssueAttachment,Guid>().Add(attachment);
+        unitOfWork.GetRepository<IssueAttachment, Guid>().Add(attachment);
 
         issue.ActionRepair = request.Notes ?? string.Empty;
-      
+
 
         ChangeStatusAsync(issue, IssueStatus.Repaired);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return mapper.Map<ResolutionActionResponse>(attachment);
+        return new ResolutionActionResponse
+        {
+            Id = attachment.Id,
+            ActionRepair = issue.ActionRepair,
+            Status = issue.Status.ToString(),
+            FilePath = attachment.Url
+        };
+
     }
 
- 
 
     private async Task<Issue.Domain.Entities.Issue.Issue> GetAssignedIssueAsync(
         Guid issueId,

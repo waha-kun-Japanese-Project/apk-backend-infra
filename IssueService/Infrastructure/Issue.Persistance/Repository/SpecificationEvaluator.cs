@@ -29,7 +29,7 @@ namespace Issue.Persistence.Repository
 
             //where filter 
 
-            if (specification != null)
+            if (specification is not null)
             {
                 query = query.Where(specification.Criteria);
             }
