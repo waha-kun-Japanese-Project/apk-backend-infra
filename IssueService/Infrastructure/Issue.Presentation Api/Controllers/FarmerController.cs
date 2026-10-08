@@ -19,7 +19,7 @@ namespace Issue.Presentation_Api.Controllers
     {
         [HttpGet("issues")]
         [Authorize(Roles = "Farmer")]
-        [Authorize]
+        
 
         public async Task<IActionResult> GetAllIssuesAsync([FromQuery] IssueFilteration issueFilteration, CancellationToken cancellationToken = default)
         {
@@ -28,8 +28,7 @@ namespace Issue.Presentation_Api.Controllers
         }
         [HttpGet("issues/{reporterId}")]
         [Authorize(Roles = "Farmer")]
-        public async Task<IActionResult> GetAllIssuesByReporterIdAsync([FromQuery] GetFArmersIssuesParams issueFilteration, Guid reporterId, CancellationToken cancellationToken = default)
-        [Authorize]
+        
 
         public async Task<IActionResult> GetAllIssuesByReporterIdAsync([FromQuery] IssueFilteration issueFilteration,CancellationToken cancellationToken = default)
         {

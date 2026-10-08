@@ -30,7 +30,7 @@ public class UserGrpcClient(UserClinet.Grpc.UserGRPcService.UserGRPcServiceClien
         return expertIds;
     }
 
-    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(IEnumerable<Guid> expertIds, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyDictionary<Guid, UserInfoDto>> GetExpertsByIdsAsync(List<Guid?> expertIds, CancellationToken cancellationToken = default)
     {
         var request = new GetExpertsRequest();
 

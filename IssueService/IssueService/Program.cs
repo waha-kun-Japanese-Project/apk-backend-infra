@@ -1,4 +1,5 @@
 using CommanLib.DependencyInjection;
+using Hangfire;
 using Issue.Client.DependencyInjection;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
