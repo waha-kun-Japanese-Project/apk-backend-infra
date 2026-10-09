@@ -21,7 +21,7 @@ namespace Issue.Client.DependencyInjection
 
             services.AddScoped<IMediaStorageGrpcClient, MediaStorageGrpcClient>();
             services.AddScoped<IUserGrpcClient,UserGrpcClient>();
-            services.AddGrpcClient<UserClinet.Grpc.UserService.UserServiceClient>(
+            services.AddGrpcClient<UserClinet.Grpc.UserGRPcService.UserGRPcServiceClient>(
                 options =>
                 {
                     options.Address = new Uri(

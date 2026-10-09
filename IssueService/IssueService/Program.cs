@@ -7,6 +7,7 @@ using Issue.Service.DependencyInjection;
 using Issue.Service.Jop;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using UserClinet.Grpc;
 
 namespace IssueService
@@ -17,7 +18,10 @@ namespace IssueService
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            }); 
 
             // HttpContext
             builder.Services.AddHttpContextAccessor();
@@ -33,12 +37,8 @@ namespace IssueService
             // Services
             builder.Services.AddServiced(
                 builder.Configuration);
-
-            //token jwt
             builder.Services.AddTokenService(builder.Configuration);
-
             builder.Services.AddEndpointsApiExplorer();
-
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -72,7 +72,6 @@ namespace IssueService
                     }
                 });
             });
-
             var app = builder.Build();
 
             // Create IssueDb (if it does not exist) and apply all pending migrations.

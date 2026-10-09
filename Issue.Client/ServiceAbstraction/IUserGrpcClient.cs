@@ -16,7 +16,7 @@ public interface IUserGrpcClient
 
     Task<IReadOnlyDictionary<Guid, UserInfoDto>>
       GetExpertsByIdsAsync(
-          IEnumerable<Guid> expertIds,
+          List<Guid?> expertIds,
           CancellationToken cancellationToken = default);
 
     Task<IReadOnlyCollection<Guid>> GetAllExpertIdsAsync(

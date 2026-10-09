@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Issue.Service.Specifications.FarmerSpecifications
 {
-    internal class GetAllWithOutIncludes : BaseSpecification<Issue.Domain.Entities.Issue.Issue>
+    internal class StatusSpecs : BaseSpecification<Issue.Domain.Entities.Issue.StatusHistory>
     {
-        public GetAllWithOutIncludes() : base(null!)
+        public StatusSpecs(Guid issueId) : base(p => p.IssueId == issueId)
         {
-
+            AddOrderByDesc(x => x.ChangedAt);
         }
     }
 }

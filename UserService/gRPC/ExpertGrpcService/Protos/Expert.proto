@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option csharp_namespace = "UserClinet.Grpc";
+option csharp_namespace = "ExpertService.Grpc";
 
 package user;
 
-service UserGRPcService {
-    rpc GetUsersByIds (GetUsersRequest)
+service UserService {
+    rpc GetExpertsByIds (GetUsersRequest)
         returns (GetUsersResponse);
 }
 

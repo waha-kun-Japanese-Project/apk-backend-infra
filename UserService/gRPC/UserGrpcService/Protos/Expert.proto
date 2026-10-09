@@ -5,7 +5,7 @@ option csharp_namespace = "ExpertService.Grpc";
 package user;
 import "google/protobuf/empty.proto";
 
-service GrpcService {
+service ExpertService {
     rpc GetExpertsByIds (GetExpertsRequest)
         returns (GetExpertsResponse);
     rpc GetAllExpert (google.protobuf.Empty)
