@@ -1,9 +1,11 @@
 using CommanLib.DependencyInjection;
 using Hangfire;
 using Issue.Client.DependencyInjection;
+using Issue.Persistence.Context;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
 using Issue.Service.Jop;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using UserClinet.Grpc;
 
@@ -36,10 +38,6 @@ namespace IssueService
             builder.Services.AddTokenService(builder.Configuration);
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-
-
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -60,30 +58,39 @@ namespace IssueService
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
-
-
             var app = builder.Build();
+
+            // Create IssueDb (if it does not exist) and apply all pending migrations.
+            // This must run BEFORE Hangfire and the recurring job below touch the database.
+            using (var migrationScope = app.Services.CreateScope())
+            {
+                var dbContext = migrationScope.ServiceProvider
+                    .GetRequiredService<IssueDbContext>();
+
+                dbContext.Database.Migrate();
+            }
 
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
