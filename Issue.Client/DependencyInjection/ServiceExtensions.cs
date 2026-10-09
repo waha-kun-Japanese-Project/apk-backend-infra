@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Issue.Client.Grpc.Services;
 
 using UserClinet.Grpc;
+using MediaClient.Grpc;
 
 namespace Issue.Client.DependencyInjection
 {
@@ -17,22 +18,28 @@ namespace Issue.Client.DependencyInjection
     {
         public static IServiceCollection AddIssueClient(this IServiceCollection services,IConfiguration configuration)
         {
-            services
-                   .AddRefitClient<IUserService>()
-                   .ConfigureHttpClient(client =>
-                    {
-                      client.BaseAddress = new Uri(
-                      configuration["Services:User:BaseUrl"]!);
-                    });
 
+            services.AddScoped<IMediaStorageGrpcClient, MediaStorageGrpcClient>();
             services.AddScoped<IUserGrpcClient,UserGrpcClient>();
-            services.AddGrpcClient<UserService.UserServiceClient>(
+            services.AddGrpcClient<UserClinet.Grpc.UserGRPcService.UserGRPcServiceClient>(
                 options =>
                 {
                     options.Address = new Uri(
                     configuration["Grpc:UserServiceUrl"]!);
                 });
-           
+            services.AddGrpcClient<UserService.Grpc.ExpertService.ExpertServiceClient>(
+                options =>
+                {
+                    options.Address = new Uri(
+                    configuration["Grpc:UserServiceUrl"]!);
+                });
+            services.AddGrpcClient<MediaStorage.MediaStorageClient>(options =>
+            {
+                options.Address = new Uri(
+                    configuration["Grpc:MediaStorageUrl"]!);
+            });
+
+
             return services;
         }
     }

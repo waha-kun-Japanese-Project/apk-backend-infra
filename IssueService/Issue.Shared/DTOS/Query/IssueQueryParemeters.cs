@@ -11,7 +11,7 @@ namespace Issue.Shared.DTOS.Query
         private const int  MAXPAGESIZE= 10;
         private const int MINPAGESIZE= 5;
 
-        public  Guid ExpertId { get; set; }
+       
         public SortingOptions? SortingOptions { get; set; }
   
         private int  pageSize= MINPAGESIZE;

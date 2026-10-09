@@ -1,21 +1,16 @@
-﻿using Issue.Domain.Entities.Issue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Issue.Shared.DTOS
+namespace Issue.Shared.DTOS.Expert
 {
-    public record ResolutionActionResponse(
-       Guid Id,
-       Guid IssueId,
-       string ActionType,
-       string? Notes,
-       Guid? TeamId,
-       string? TeamName,
-       IssueStatus Status,
-       DateTime CreatedAt)
+    public record ResolutionActionResponse
     {
+        public Guid Id { get; init; }
+        public string ActionRepair { get; init; } = string.Empty;
+        public string Status { get; init; } = string.Empty;
+        public string FilePath { get; init; } = string.Empty;
     }
 }

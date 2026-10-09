@@ -1,5 +1,5 @@
 using CommanLib.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
+using Hangfire;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
 using Report.Persistence.Context;
@@ -64,6 +64,7 @@ namespace ReportService
                 var reportDb = scope.ServiceProvider.GetRequiredService<ReportDbContext>();
                 await reportDb.Database.MigrateAsync();
             }
+            app.UseHangfireDashboard("/hangfire");
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

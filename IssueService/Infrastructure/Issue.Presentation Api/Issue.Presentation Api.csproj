@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Core\Issue.ServiceAbstraction\Issue.ServiceAbstraction.csproj" />
   </ItemGroup>
 

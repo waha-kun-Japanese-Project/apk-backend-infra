@@ -1,0 +1,29 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "UserService.Grpc";
+
+package user;
+
+service UserGrpcService {
+  rpc GetUserById (GetUserByIdRequest) returns (UserResponse);
+  rpc GetUsersByIds (GetUsersByIdsRequest) returns (UserListResponse);
+}
+
+message GetUserByIdRequest {
+  string user_id = 1;
+}
+
+message GetUsersByIdsRequest {
+  repeated string user_ids = 1;
+}
+
+message UserResponse {
+  string id = 1;
+  string full_name = 2;
+  string profile_image_url = 3;
+  string role = 4;
+}
+
+message UserListResponse {
+  repeated UserResponse users = 1;
+}

@@ -1,8 +1,14 @@
+using CommanLib.DependencyInjection;
+using Hangfire;
 using Issue.Client.DependencyInjection;
+using Issue.Persistence.Context;
 using Issue.Persistence.DependencyInjection;
 using Issue.Service.DependencyInjection;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Issue.Service.Jop;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using UserClinet.Grpc;
 
 namespace IssueService
 {
@@ -12,33 +18,99 @@ namespace IssueService
         {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddControllers();
-            builder.Services.AddPersistenceServices(builder.Configuration);
-            builder.Services.AddIssueClient(builder.Configuration);
-            builder.Services.AddServiced(builder.Configuration);
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddHealthChecks();
 
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            }); 
+
+            // HttpContext
+            builder.Services.AddHttpContextAccessor();
+
+            // Persistence
+            builder.Services.AddPersistenceServices(
+                builder.Configuration);
+
+            // Clients
+            builder.Services.AddIssueClient(
+                builder.Configuration);
+
+            // Services
+            builder.Services.AddServiced(
+                builder.Configuration);
+            builder.Services.AddTokenService(builder.Configuration);
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Issue Service API",
+                    Version = "v1"
+                });
+
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter JWT Token.\n\nExample:\nBearer eyJhbGciOiJIUzI1NiIs..."
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
+            // Create IssueDb (if it does not exist) and apply all pending migrations.
+            // This must run BEFORE Hangfire and the recurring job below touch the database.
+            using (var migrationScope = app.Services.CreateScope())
+            {
+                var dbContext = migrationScope.ServiceProvider
+                    .GetRequiredService<IssueDbContext>();
+
+                dbContext.Database.Migrate();
+            }
+
+            if (app.Environment.IsDevelopment())
             {
                 var issueDb = scope.ServiceProvider.GetRequiredService<Issue.Persistence.Context.IssueDbContext>();
                 await issueDb.Database.MigrateAsync();
             }
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            if (!app.Environment.IsProduction())
-            {
-                app.UseHttpsRedirection();
-            }
-            app.UseAuthorization();
+            app.UseHangfireDashboard("/hangfire");
+            app.UseHttpsRedirection();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
-            app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false });
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var recurringJobManager =
+                    scope.ServiceProvider
+                        .GetRequiredService<IRecurringJobManager>();
+
+                recurringJobManager.AddOrUpdate<ExpertAssignmentReconciliationJob>(
+                    "expert-assignment-reconciliation",
+                    job => job.ExecuteAsync(),
+                    "*/20 * * * *");
+            }
+
             app.Run();
         }
     }

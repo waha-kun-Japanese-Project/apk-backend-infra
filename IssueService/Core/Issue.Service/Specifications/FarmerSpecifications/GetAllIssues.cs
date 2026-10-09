@@ -12,8 +12,9 @@ namespace Issue.Service.Specifications.FarmerSpecifications
     internal class GetAllIssues : BaseSpecification<Issue.Domain.Entities.Issue.Issue>
     {
         public GetAllIssues(IssueFilteration issueFilteration) : base(p => (!issueFilteration.Completed.HasValue || p.Status == issueFilteration.Completed)
-                    && (!issueFilteration.Critical.HasValue || p.Priority == issueFilteration.Critical)
-                    && (!issueFilteration.Assigend.HasValue || p.Status == issueFilteration.Assigend))
+                    || (!issueFilteration.Critical.HasValue || p.Priority == issueFilteration.Critical)
+                    || (!issueFilteration.Assigend.HasValue || p.Status == issueFilteration.Assigend)
+                    )
 
         {
             AddInclude(x => x.IssueAttachments);

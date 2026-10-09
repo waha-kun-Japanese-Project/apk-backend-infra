@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace Issue.Service.Specifications
 {
-    internal class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity : class
+    public  class BaseSpecification<TEntity> : ISpecification<TEntity> where TEntity : class
     {
         protected BaseSpecification(Expression<Func<TEntity, bool>> expression)
         {
             Criteria = expression;
         }
         public ICollection<Expression<Func<TEntity, object>>> Includes { get;private set; } = [];
+        public ICollection<Func<IQueryable<TEntity>, IQueryable<TEntity>>> IncludeChains  { get; private set; } = [];
 
         public Expression<Func<TEntity, bool>> Criteria { get; private set; }
 
@@ -44,8 +45,15 @@ namespace Issue.Service.Specifications
         protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
         {
             Includes.Add(includeExpression);
-           
         }
+
+        protected void AddIncludeChain(
+      Func<IQueryable<TEntity>, IQueryable<TEntity>> includeChain)
+        {
+            IncludeChains.Add(includeChain);
+        }
+
+
         protected void AddOrderBy(Expression<Func<TEntity, object>> ordertby)=>
             OrderBy=ordertby;
 

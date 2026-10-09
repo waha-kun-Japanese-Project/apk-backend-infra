@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Issue.Service.Specifications.FarmerSpecifications
 {
-    internal class GetAllWithOutIncludes : BaseSpecification<Issue.Domain.Entities.Issue.Comment>
+    internal class GetAllWithOutIncludes : BaseSpecification<Issue.Domain.Entities.Issue.Issue>
     {
         public GetAllWithOutIncludes() : base(null!)
         {

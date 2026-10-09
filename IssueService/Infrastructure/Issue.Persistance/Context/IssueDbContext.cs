@@ -19,8 +19,6 @@ namespace Issue.Persistence.Context
         public DbSet<IssueVote> Votes { get; set; }
         public DbSet<IssueFeedback> IssueFeedbacks { get; set; } = null!;
         public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
-        public DbSet<ResolutionActions> ResolutionActions { get; set; } = null!;
-        public DbSet<MaintenanceTeam> MaintenanceTeams { get; set; } = null!;
         public DbSet<RepairSchedule> RepairSchedules { get; set; } = null!;
         public DbSet<Notification> Notifications { get; set; } = null!;
         public DbSet<ExpertReviews> ExpertReviews { get; set; } = null!;
