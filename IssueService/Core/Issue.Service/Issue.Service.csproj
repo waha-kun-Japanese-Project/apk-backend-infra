@@ -27,8 +27,14 @@
     </PackageReference>
     <PackageReference Include="MassTransit" Version="8.3.6" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
+	  <PackageReference Include="Hangfire" Version="1.8.25" />
+	  <PackageReference Include="Hangfire.AspNetCore" Version="1.8.25" />
+	  <PackageReference Include="Hangfire.SqlServer" Version="1.8.25" />
   </ItemGroup>
+	
+	
   <ItemGroup>
+    <ProjectReference Include="..\..\..\CommanLib\CommanLib\CommanLib.csproj" />
     <ProjectReference Include="..\..\..\Issue.Client\Issue.Client.csproj" />
     <ProjectReference Include="..\Issue.Domain\Issue.Domain.csproj" />
     <ProjectReference Include="..\Issue.ServiceAbstraction\Issue.ServiceAbstraction.csproj" />

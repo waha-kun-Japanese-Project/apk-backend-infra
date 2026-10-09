@@ -8,10 +8,11 @@ namespace Issue.Domain.Entities.Issue
 {
     public  enum IssuePriority
     {
-        Low = 0,
-        Medium = 1,
-        High = 2,
-        Critical = 3,
+        unknown = 0,    
+        Low = 1,
+        Medium = 2,
+        High = 3,
+        Critical = 4,
 
     }
 }

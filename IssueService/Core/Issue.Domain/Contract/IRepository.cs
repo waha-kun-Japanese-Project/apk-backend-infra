@@ -17,8 +17,8 @@ namespace Issue.Domain.Contract
         Task<TEntity?> GetByIdAsync(ISpecification<TEntity> specification,CancellationToken cancellationToken=default!);
         Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
         Task<int> CountAsync(ISpecification<TEntity> specification, CancellationToken cancellationToken = default);
-        Task<Dictionary<Guid,int>> CountByAsync(ISpecification<TEntity> specification,
-            Expression<Func<TEntity, Guid>> groupBy
+        Task<Dictionary<Guid, int>> CountByAsync(ISpecification<TEntity> spec,
+             Expression<Func<TEntity, Guid>> groupBy
             , CancellationToken ct = default);
 
     }

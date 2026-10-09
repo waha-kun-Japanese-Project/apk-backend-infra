@@ -13,6 +13,8 @@ namespace Report.Persistence.Context
         public DbSet<AiAnalysis> AiAnalyses { get; set; } = null!;
         public DbSet<IssueAttachment> IssueAttachments { get; set; } = null!;
 
+        public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Only apply configurations for entities in the Issue namespace

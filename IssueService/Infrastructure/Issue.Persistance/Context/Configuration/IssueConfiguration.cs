@@ -22,6 +22,7 @@ namespace Issue.Persistence.Context.Configuration
             builder.Property(i => i.Status).IsRequired();
             builder.Property(i => i.Priority).IsRequired();
             builder.Property(i => i.ReporterId).IsRequired();
+            builder.Property(i=>i.RowVersion).IsRowVersion();
 
             builder.HasOne(i => i.RepairSchedule)
                 .WithOne(rs => rs.Issue)
@@ -38,11 +39,6 @@ namespace Issue.Persistence.Context.Configuration
                 .HasForeignKey(er => er.IssueId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany(i => i.ResolutionActions)
-                .WithOne(ra => ra.Issue)
-                .HasForeignKey(ra => ra.IssueId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.HasMany(i => i.StatusHistory)
                 .WithOne(sh => sh.Issue)
                 .HasForeignKey(sh => sh.IssueId)
@@ -57,18 +53,16 @@ namespace Issue.Persistence.Context.Configuration
                 .WithOne(n => n.RelatedIssue)
                 .HasForeignKey(n => n.RelatedIssueId)
                 .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasMany(i => i.Votes)
                 .WithOne(v => v.Issue)
                 .HasForeignKey(v => v.IssueId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
-          
-           
+
             builder.HasMany(i => i.IssueAttachments)
                 .WithOne(ia => ia.Issue)
                 .HasForeignKey(ia => ia.IssueId)
                 .OnDelete(DeleteBehavior.Cascade);
-          
 
         }
     }

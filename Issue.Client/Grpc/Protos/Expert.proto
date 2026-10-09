@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option csharp_namespace = "UserService.Grpc";
+
+package user;
+
+import "google/protobuf/empty.proto";
+
+service ExpertService {
+    rpc GetExpertsByIds (GetExpertsRequest)
+        returns (GetExpertsResponse);
+    rpc GetAllExpert (google.protobuf.Empty)
+        returns (ExpertIdsRespone);
+}
+
+message GetExpertsRequest {
+    repeated string user_ids = 1;
+}
+
+message GetExpertsResponse {
+    repeated ExpertResponse users = 1;
+}
+
+message ExpertResponse {
+    string id = 1;
+    string name = 2;
+    string photo_url = 3;
+}
+
+message ExpertIdsRespone{
+     repeated string expert_ids = 1;
+}
