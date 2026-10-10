@@ -33,6 +33,8 @@ jobs:
             dockerfile: IssueService/IssueService/Dockerfile
           - service: usergrpcservice
             dockerfile: UserService/gRPC/UserGrpcService/Dockerfile
+          - service: mediagrpcservice
+            dockerfile: MediaStorageService/gRPC/Media.Grpc/Dockerfile
     outputs:
       image_tag: ${{ steps.vars.outputs.image_tag }}
     steps:
@@ -88,7 +90,8 @@ jobs:
             [mapservice]=map-definition.yml
             [notificationservice]=notification-definition.yml
             [issueservice]=issue-definition.yml
-            [issue.client]=issue-client-definition.yml
+            [usergrpcservice]=usergrpc-definition.yml
+            [mediagrpcservice]=mediagrpc-definition.yml
           )
           for svc in "${!FILES[@]}"; do
             f="${FILES[$svc]}"
