@@ -21,7 +21,7 @@ namespace IssueService
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-            }); 
+            });
 
             // HttpContext
             builder.Services.AddHttpContextAccessor();
@@ -85,12 +85,9 @@ namespace IssueService
                 dbContext.Database.Migrate();
             }
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
 
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
