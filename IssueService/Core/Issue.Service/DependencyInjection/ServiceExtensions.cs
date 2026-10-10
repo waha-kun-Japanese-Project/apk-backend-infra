@@ -35,6 +35,16 @@ namespace Issue.Service.DependencyInjection
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
+                    // Reads RabbitMq__Host / Port / Username / Password (k8s env vars); falls back to local defaults.
+                    var host = configuration["RabbitMq:Host"] ?? "localhost";
+                    var port = ushort.TryParse(configuration["RabbitMq:Port"], out var p) ? p : (ushort)5672;
+
+                    cfg.Host(host, port, "/", h =>
+                    {
+                        h.Username(configuration["RabbitMq:Username"] ?? "guest");
+                        h.Password(configuration["RabbitMq:Password"] ?? "guest");
+                    });
+
                     cfg.ConfigureEndpoints(context);
                 });
             });
@@ -48,7 +58,7 @@ namespace Issue.Service.DependencyInjection
 
            services.AddHangfireServer();
 
-
+            
        
 
 
