@@ -55,7 +55,10 @@ namespace NotificationService
 
             FirebaseApp.Create(new AppOptions
             {
-                Credential = GoogleCredential.FromFile("../../AuthService/AuthService/FireBase/graduation-project-3c67f-firebase-adminsdk-fbsvc-b88880ea28.json")
+                // k8s mounts the key at /app/FireBase/...; locally fall back to the AuthService copy.
+                Credential = CredentialFactory.FromFile<ServiceAccountCredential>(File.Exists(firebasePath)
+                    ? firebasePath
+                    : "../../AuthService/AuthService/FireBase/graduation-project-3c67f-firebase-adminsdk-fbsvc-b88880ea28.json").ToGoogleCredential()
             });
             var app = builder.Build();
             app.UseSwagger();
