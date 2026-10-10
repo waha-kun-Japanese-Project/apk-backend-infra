@@ -40,25 +40,25 @@ namespace Report.Service.BackgroundJop
             var attachment= await attachmentrepo.GetByIdAsync(new EntityByIdSpecification<IssueAttachment>(createIssueRequest.IssueAttachmentId));
 
             attachment.IssueId = issue.Id;
-         attachmentrepo.Update(attachment);
-            ChangeStatus(issue, issue.Status);  
+            attachmentrepo.Update(attachment);
+            // ChangeStatus(issue, issue.Status);  
            await unitOfWork.SaveChangesAsync();
 
 
               await publishEndpoint.Publish(new IssueCreatedEvent(issue.Id));
         }
 
-        private void ChangeStatus(Issue issue , IssueStatus status)
-        {
-            issue.Status = status;
+        // private void ChangeStatus(Issue issue , IssueStatus status)
+        // {
+        //     issue.Status = status;
 
-            unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
-            {
-                IssueId = issue.Id,
-                Status = status,
-                ChangedById = null,
-                Note = $"Issue {status} by system"
-            });
-        }
+        //     unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
+        //     {
+        //         IssueId = issue.Id,
+        //         Status = status,
+        //         ChangedById = null,
+        //         Note = $"Issue {status} by system"
+        //     });
+        // }
     }
 }

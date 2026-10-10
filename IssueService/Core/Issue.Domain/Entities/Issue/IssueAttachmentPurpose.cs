@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace Issue.Domain.Entities.Issue
+﻿namespace Issue.Domain.Entities.Issue
 {
     public enum IssueAttachmentPurpose
     {

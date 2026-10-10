@@ -47,7 +47,9 @@ public class ExpertGrpcService : ExpertService.ExpertServiceBase
         ServerCallContext context)
     {
         var userIds = request.UserIds
-             .Select(Guid.Parse)
+              .Where(id => Guid.TryParse(id, out _))
+                .Select(Guid.Parse)
+            .Distinct()
              .ToList();
 
         var experts = await (

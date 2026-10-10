@@ -1,8 +1,9 @@
 using AutoMapper;
 using Issue.Domain.Entities.Issue;
-using Issue.Shared.DTOS;
 using Issue.Service.Specifications.FarmerSpecifications;
+using Issue.Shared.DTOS;
 using Issue.Shared.DTOS.AssignExpert;
+using Issue.Shared.DTOS.FarmerDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,18 +90,55 @@ namespace Issue.Service.MapperingProfiles
             CreateMap<RepairSchedule, RepairScheduleResponse>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Issue.Status.ToString()));
                
+
             CreateMap<Issue.Domain.Entities.Issue.Issue, Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues>()
                  .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                  .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
                  .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-                 .ForMember(dest => dest.SlotStart, opt => opt.MapFrom(src => src.RepairSchedule.SlotStart))
-                 .ForMember(dest => dest.SlotEnd, opt => opt.MapFrom(src => src.RepairSchedule.SlotEnd))
-                 .ForMember(dest => dest.SceduleDate, opt => opt.MapFrom(src => src.RepairSchedule.ScheduledDate));
+        
+                 .ForMember(dest => dest.longitude , opt => opt.MapFrom(src => src.GPSLocation.Longitude))
+                 .ForMember(dest => dest.Latiude, opt => opt.MapFrom(src => src.GPSLocation.Latitude))
+                 .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
+                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+           
+
+            CreateMap<StatusHistory, IssueTrackingStepDto>()
+                .ForMember(
+                    dest => dest.Status,
+                    opt => opt.MapFrom(src => src.Status))
+                .ForMember(
+                    dest => dest.ChangedAt,
+                    opt => opt.MapFrom(src => src.ChangedAt))
+                .ForMember(
+                    dest => dest.Note,
+                    opt => opt.MapFrom(src => src.Note))
+                .ForMember(
+                    dest => dest.Name,
+                    opt => opt.MapFrom(src => GetStatusName(src.Status).ToString()));
+
+            CreateMap<StatusHistory,CompleteStausReponse>()
+                .ForMember(dest => dest.status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.IssueId))
+                .ForMember(dest => dest.ChangedAt , opt => opt.MapFrom(src => src.ChangedAt))
+                .ForMember(dest => dest.ReporterId , opt=> opt.MapFrom(src=>src.ChangedById));
 
 
 
+        }
+        private static string GetStatusName(IssueStatus status)
+        {
+            return status switch
+            {
+                IssueStatus.Reported => "Issue Reported",
+                IssueStatus.Diagnosed => "AI Diagnosis",
+                IssueStatus.Reviewed => "Expert Review",
+                IssueStatus.Assigned => "Expert Assigned",
+                IssueStatus.Scheduled => "Repair Scheduled",
+                IssueStatus.Repaired => "Repair Completed",
+                IssueStatus.completed => "Follow-up and Confirmation",
+                _ => status.ToString()
+            };
         }
     }
 }
