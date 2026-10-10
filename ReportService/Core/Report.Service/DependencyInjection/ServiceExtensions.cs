@@ -1,10 +1,15 @@
-﻿using Hangfire;
+using Hangfire;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Report.Service.BackgroundJop;
 using Report.Service.Services;
 using Report.ServiceAbstraction;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Report.Service.DependencyInjection
 {

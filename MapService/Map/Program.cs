@@ -1,3 +1,4 @@
+
 using CommanLib.DependencyInjection;
 using Map.Persistence.DedpendeancyInjection;
 using Map.Service.DependanceInjection;
@@ -11,15 +12,23 @@ namespace Map
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
+
             builder.Services.AddControllers();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddServices();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddTokenService(builder.Configuration);
-            builder.Services.AddHealthChecks();
+            builder.Services.AddHealthChecks(); // k8s startup/readiness/liveness probes -> GET /health
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Map Service API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Report Service API",
+                    Version = "v1"
+                });
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -28,44 +37,40 @@ namespace Map
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "Paste the accessToken only (Swagger adds 'Bearer ')."
+                    Description = "Enter JWT Token.\n\nExample:\nBearer eyJhbGciOiJIUzI1NiIs..."
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
             });
 
             var app = builder.Build();
 
-            app.Use(async (context, next) =>
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                try { await next(); }
-                catch (KeyNotFoundException ex) when (!context.Response.HasStarted)
-                {
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    await context.Response.WriteAsJsonAsync(new { status = 404, code = "NOT_FOUND", message = ex.Message });
-                }
-            });
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            if (!app.Environment.IsProduction())
-            {
-                app.UseHttpsRedirection();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
+
+            app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
             app.MapHealthChecks("/health");
-
+            
             app.Run();
         }
     }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Report.Domain.Entities.Issue;
 using Report.Shared.DTOS.Client;
 using Report.Shared.DTOS.Report;
