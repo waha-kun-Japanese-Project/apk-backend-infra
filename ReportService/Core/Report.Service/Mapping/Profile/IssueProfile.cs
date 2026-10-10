@@ -2,12 +2,10 @@
 using Report.Domain.Entities.Issue;
 using Report.Shared.DTOS.Client;
 using Report.Shared.DTOS.Report;
-using System;
-using System.Net.Mail;
 
 namespace Report.Service.Mapping;
 
-public class IssueProfile : Profile
+public class IssueProfile : global::AutoMapper.Profile
 {
     public IssueProfile()
     {

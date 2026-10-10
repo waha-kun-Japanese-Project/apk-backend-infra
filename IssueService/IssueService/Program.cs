@@ -87,6 +87,7 @@ namespace IssueService
 
             if (app.Environment.IsDevelopment())
             {
+                using var scope = app.Services.CreateScope();
                 var issueDb = scope.ServiceProvider.GetRequiredService<Issue.Persistence.Context.IssueDbContext>();
                 await issueDb.Database.MigrateAsync();
             }

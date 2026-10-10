@@ -1,5 +1,6 @@
 using CommanLib.DependencyInjection;
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
 using Report.Persistence.Context;
