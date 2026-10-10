@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Map.Domain.Entities.ISSUE;
+using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using IssueEntity = Map.Domain.Entities.ISSUE.Issue;
 
 namespace Map.Domain.Contarcts
 {
     public interface IIssueRepo
     {
-        Task<IssueEntity> GetByIdAsync(Guid id);
+        Task<Issue> GetByIdAsync(Guid id   );
 
-        Task<IEnumerable<IssueEntity>> GetAllAsync(int pageSize, int page, CancellationToken cancellationToken);
-        Task<IEnumerable<IssueEntity>> GetByTitle(string title, int pagesize, int page, CancellationToken cancellationToken);
+        Task<IEnumerable<Issue>> GetAllAsync(int pageSize, int page ,CancellationToken cancellationToken);
+        Task<IEnumerable<Issue>> GetByTitle(string title, int pagesize, int page, CancellationToken cancellationToken);
     }
 }

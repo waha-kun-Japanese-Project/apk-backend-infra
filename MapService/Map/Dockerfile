@@ -11,11 +11,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-# Map.csproj -> Map.Presentation/Map.Persistence -> CommanLib AND
-# IssueService/Core/Issue.Domain + IssueService/Infrastructure/Issue.Persistance
-# (a real cross-service compile-time dependency - MapService cannot build
-# without IssueService's source present). Copying full context before
-# restore is required here, not just an optimization.
+# Map.csproj -> Map.Presentation / Map.Persistence / Map.Service -> Map.Domain, Map.Shared,
+# Map.ServiceAbsraction and CommanLib (repo root). MapService has NO compile-time
+# dependency on IssueService; it only reads IssueDb through its own IssueDbContext.
+# The full context is copied before restore because of the cross-folder CommanLib reference.
 COPY . .
 WORKDIR "/src/MapService/Map"
 RUN dotnet restore "./Map.csproj"

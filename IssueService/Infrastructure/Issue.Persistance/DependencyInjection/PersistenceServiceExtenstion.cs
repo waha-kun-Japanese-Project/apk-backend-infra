@@ -19,10 +19,9 @@ namespace Issue.Persistence.DependencyInjection
          
            
             services.AddDbContext<IssueDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("SQLConnection"),
-                    sqlOptions =>
-                        sqlOptions.MigrationsAssembly(typeof(IssueDbContext).Assembly.FullName)));
+            {
+                options.UseSqlServer(configuration.GetConnectionString("SQLConnection"));
+            });
 
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();

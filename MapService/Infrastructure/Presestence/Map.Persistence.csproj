@@ -22,8 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\CommanLib\CommanLib\CommanLib.csproj" />
     <ProjectReference Include="..\..\Core\ServiceAbsraction\Map.ServiceAbsraction.csproj" />
-    <ProjectReference Include="..\..\Core\Domain\Map.Domain.csproj" />
-    <ProjectReference Include="..\..\..\IssueService\Infrastructure\Issue.Persistance\Issue.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

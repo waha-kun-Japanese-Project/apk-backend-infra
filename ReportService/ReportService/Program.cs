@@ -2,27 +2,29 @@ using CommanLib.DependencyInjection;
 using Hangfire;
 using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
-using Report.Persistence.Context;
 using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
-using ReportService.Middleware;
 
 namespace ReportService
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
+
             builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddPersistenceServices(builder.Configuration);
             builder.Services.AddTokenService(builder.Configuration);
             builder.Services.AddReportClient(builder.Configuration);
             builder.Services.AddReportService(builder.Configuration);
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddHealthChecks();
+            builder.Services.AddHealthChecks(); // k8s startup/readiness/liveness probes -> GET /health
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -42,39 +44,37 @@ namespace ReportService
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
                 {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
             });
+
 
             var app = builder.Build();
 
-            using (var scope = app.Services.CreateScope())
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
             {
-                var reportDb = scope.ServiceProvider.GetRequiredService<ReportDbContext>();
-                await reportDb.Database.MigrateAsync();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             app.UseHangfireDashboard("/hangfire");
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseHttpsRedirection();
 
-            app.UseSwagger();
-            app.UseSwaggerUI();
-            if (!app.Environment.IsProduction())
-            {
-                app.UseHttpsRedirection();
-            }
+            app.UseAuthentication();
             app.UseAuthorization();
+
 
             app.MapControllers();
             app.MapHealthChecks("/health");

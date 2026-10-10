@@ -14,9 +14,8 @@ namespace IssueService
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers().AddJsonOptions(options =>
@@ -39,6 +38,7 @@ namespace IssueService
             builder.Services.AddServiced(
                 builder.Configuration);
             builder.Services.AddTokenService(builder.Configuration);
+            builder.Services.AddHealthChecks(); // k8s startup/readiness/liveness probes -> GET /health
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
             {
@@ -85,6 +85,12 @@ namespace IssueService
                 dbContext.Database.Migrate();
             }
 
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
             app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
@@ -92,6 +98,7 @@ namespace IssueService
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHealthChecks("/health");
 
             using (var scope = app.Services.CreateScope())
             {
