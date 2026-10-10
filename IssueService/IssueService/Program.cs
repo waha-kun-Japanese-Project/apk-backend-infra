@@ -1,5 +1,7 @@
 using CommanLib.DependencyInjection;
 using Hangfire;
+using Hangfire.AspNetCore;
+using Hangfire.Dashboard;
 using Issue.Client.DependencyInjection;
 using Issue.Persistence.Context;
 using Issue.Persistence.DependencyInjection;
@@ -7,6 +9,7 @@ using Issue.Service.DependencyInjection;
 using Issue.Service.Jop;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using System.Text.Json.Serialization;
 using UserClinet.Grpc;
 
@@ -23,23 +26,19 @@ namespace IssueService
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
-            // HttpContext
             builder.Services.AddHttpContextAccessor();
 
-            // Persistence
-            builder.Services.AddPersistenceServices(
-                builder.Configuration);
+            builder.Services.AddPersistenceServices(builder.Configuration);
 
-            // Clients
-            builder.Services.AddIssueClient(
-                builder.Configuration);
+            builder.Services.AddIssueClient(builder.Configuration);
 
-            // Services
-            builder.Services.AddServiced(
-                builder.Configuration);
+            builder.Services.AddServiced(builder.Configuration);
+
             builder.Services.AddTokenService(builder.Configuration);
-            builder.Services.AddHealthChecks(); // k8s startup/readiness/liveness probes -> GET /health
+
+            builder.Services.AddHealthChecks();
             builder.Services.AddEndpointsApiExplorer();
+
             builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
@@ -73,10 +72,9 @@ namespace IssueService
                     }
                 });
             });
+
             var app = builder.Build();
 
-            // Create IssueDb (if it does not exist) and apply all pending migrations.
-            // This must run BEFORE Hangfire and the recurring job below touch the database.
             using (var migrationScope = app.Services.CreateScope())
             {
                 var dbContext = migrationScope.ServiceProvider
@@ -85,10 +83,19 @@ namespace IssueService
                 dbContext.Database.Migrate();
             }
 
-
             app.UseSwagger();
             app.UseSwaggerUI();
-            app.UseHangfireDashboard("/hangfire");
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new IDashboardAuthorizationFilter[]
+                {
+                    new HangfireBasicAuthFilter(
+                        app.Configuration["Hangfire:DashboardUser"] ?? string.Empty,
+                        app.Configuration["Hangfire:DashboardPassword"] ?? string.Empty)
+                }
+            });
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
@@ -100,8 +107,7 @@ namespace IssueService
             using (var scope = app.Services.CreateScope())
             {
                 var recurringJobManager =
-                    scope.ServiceProvider
-                        .GetRequiredService<IRecurringJobManager>();
+                    scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
 
                 recurringJobManager.AddOrUpdate<ExpertAssignmentReconciliationJob>(
                     "expert-assignment-reconciliation",
@@ -110,6 +116,46 @@ namespace IssueService
             }
 
             app.Run();
+        }
+    }
+
+    public sealed class HangfireBasicAuthFilter : IDashboardAuthorizationFilter
+    {
+        private readonly string _username;
+        private readonly string _password;
+
+        public HangfireBasicAuthFilter(string username, string password)
+        {
+            _username = username;
+            _password = password;
+        }
+
+        public bool Authorize(DashboardContext context)
+        {
+            if (string.IsNullOrEmpty(_username) || string.IsNullOrEmpty(_password))
+            {
+                return false;
+            }
+
+            var authorization = context.GetHttpContext().Request.Headers["Authorization"].ToString();
+            if (!authorization.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            try
+            {
+                var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(authorization[6..]));
+                var separator = credentials.IndexOf(':');
+
+                return separator >= 0
+                    && credentials[..separator] == _username
+                    && credentials[(separator + 1)..] == _password;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
     }
 }
