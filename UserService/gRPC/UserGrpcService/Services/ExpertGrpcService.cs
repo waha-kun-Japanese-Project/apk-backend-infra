@@ -1,4 +1,4 @@
-﻿using ExpertService.Grpc;
+using UserService.Grpc;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
@@ -9,7 +9,7 @@ using User.Persistence.Context;
 
 namespace UserGrpcService.Services;
 
-public class ExpertGrpcService : GrpcService.GrpcServiceBase
+public class ExpertGrpcService : ExpertService.ExpertServiceBase
 {
     private readonly AppDbContext _context;
 
@@ -62,7 +62,7 @@ public class ExpertGrpcService : GrpcService.GrpcServiceBase
             where userIds.Contains(user.Id)
                   && role.Name == "EXPERT"
 
-            select new ExpertsResponse
+            select new ExpertResponse
             {
                 Id = user.Id.ToString(),
                 Name = user.UserName,
