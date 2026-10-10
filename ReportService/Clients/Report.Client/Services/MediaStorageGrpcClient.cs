@@ -3,9 +3,7 @@ using MediaClient.Grpc;
 using Microsoft.AspNetCore.Http;
 using Report.Client.AbstructServices;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Report.Client.Services
@@ -14,8 +12,9 @@ namespace Report.Client.Services
     {
         public async Task<string> UploadAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
-            using var call = client.UploadMedia(
-            cancellationToken: cancellationToken);
+            ArgumentNullException.ThrowIfNull(file);
+
+            using var call = client.UploadMedia(cancellationToken: cancellationToken);
 
             await call.RequestStream.WriteAsync(new UploadMediaRequest
             {
@@ -30,7 +29,7 @@ namespace Report.Client.Services
             var buffer = new byte[64 * 1024];
 
             int read;
-            while ((read = await stream.ReadAsync(buffer, cancellationToken)) > 0)
+            while ((read = await stream.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken)) > 0)
             {
                 await call.RequestStream.WriteAsync(new UploadMediaRequest
                 {

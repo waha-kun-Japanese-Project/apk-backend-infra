@@ -85,12 +85,6 @@ namespace IssueService
                 dbContext.Database.Migrate();
             }
 
-            if (app.Environment.IsDevelopment())
-            {
-                var issueDb = scope.ServiceProvider.GetRequiredService<Issue.Persistence.Context.IssueDbContext>();
-                await issueDb.Database.MigrateAsync();
-            }
-
             app.UseHangfireDashboard("/hangfire");
             app.UseHttpsRedirection();
 
