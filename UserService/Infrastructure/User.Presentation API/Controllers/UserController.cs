@@ -23,13 +23,6 @@ namespace User.Presentation_API.Controllers
             return Ok(userDetails);
         }
 
-        [HttpGet("expert-details")]
-        [Authorize]
-        public async Task<IActionResult> GetExpertDetails()
-        {
-            var expertDetails = await userService.GetExpertDetailsAsync();
-            return Ok(expertDetails);
-        }
 
         [HttpGet("all")]
         [Authorize(Roles = "Admin")]

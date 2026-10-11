@@ -122,12 +122,7 @@ namespace User.Services.Services
 
         }
 
-        public async Task<IEnumerable<ExpertDetailsResponse>> GetExpertDetailsAsync()
-        {
-            var experts = await userRepo.GetUserInRoleAsync("Expert");
-            return mapper.Map<IEnumerable<ExpertDetailsResponse>>(experts);
 
-
-        }
+    
     }
 }

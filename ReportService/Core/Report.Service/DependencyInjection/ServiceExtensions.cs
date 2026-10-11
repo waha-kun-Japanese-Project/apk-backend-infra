@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Report.Service.BackgroundJop;
 using Report.Service.Services;
 using Report.ServiceAbstraction;
+using Hangfire.SqlServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,21 @@ namespace Report.Service.DependencyInjection
             services.AddScoped<IIssueCreationJob, IssueCreationJob>();
 
             services.AddHangfire(config => config
-               .UseSimpleAssemblyNameTypeSerializer()
-             .UseRecommendedSerializerSettings()
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
                 .UseSqlServerStorage(
-            configuration.GetConnectionString("HangfireConnection")));
-
-            // Server: the background worker that actually executes jobs
+                    configuration.GetConnectionString("HangfireConnection"),
+                    new SqlServerStorageOptions
+                    {
+                        SchemaName = "ReportHangfire",         // isolated from IssueService
+                        PrepareSchemaIfNecessary = true,
+                        QueuePollInterval = TimeSpan.Zero,
+                        UseRecommendedIsolationLevel = true,
+                        DisableGlobalLocks = true
+                    }));
             services.AddHangfireServer();
+
             services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
             {
                 // Reads RabbitMq__Host / Port / Username / Password (k8s env vars); falls back to local defaults.
