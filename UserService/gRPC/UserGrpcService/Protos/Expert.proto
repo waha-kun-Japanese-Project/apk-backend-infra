@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "ExpertService.Grpc";
+option csharp_namespace = "UserService.Grpc";
 
 package user;
 import "google/protobuf/empty.proto";
@@ -17,10 +17,10 @@ message GetExpertsRequest {
 }
 
 message GetExpertsResponse {
-    repeated ExpertsResponse users = 1;
+    repeated ExpertResponse users = 1;
 }
 
-message ExpertsResponse {
+message ExpertResponse {
     string id = 1;
     string name = 2;
     string photo_url = 3;

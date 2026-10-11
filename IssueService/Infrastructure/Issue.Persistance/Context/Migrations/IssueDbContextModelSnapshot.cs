@@ -462,7 +462,6 @@ namespace Issue.Persistence.Context.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("ChangedById")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
