@@ -39,26 +39,35 @@ namespace Report.Service.BackgroundJop
                 .GetRepository<IssueAttachment, Guid>();
             var attachment= await attachmentrepo.GetByIdAsync(new EntityByIdSpecification<IssueAttachment>(createIssueRequest.IssueAttachmentId));
 
+            // Without this the job threw a NullReferenceException that only Hangfire's dashboard saw.
+            if (attachment is null)
+                throw new InvalidOperationException(
+                    $"Attachment {createIssueRequest.IssueAttachmentId} no longer exists; issue was not created.");
+
             attachment.IssueId = issue.Id;
             attachmentrepo.Update(attachment);
-            // ChangeStatus(issue, issue.Status);  
+
+            // The farmer's tracker (IssueService GET Farmer/{id}/tracking) is built from StatusHistory,
+            // so an issue with no row here has no steps to show. Diagnosed is the status the mapper sets.
+            ChangeStatus(issue, issue.Status);
+
            await unitOfWork.SaveChangesAsync();
 
 
               await publishEndpoint.Publish(new IssueCreatedEvent(issue.Id));
         }
 
-        // private void ChangeStatus(Issue issue , IssueStatus status)
-        // {
-        //     issue.Status = status;
+        private void ChangeStatus(Issue issue, IssueStatus status)
+        {
+            issue.Status = status;
 
-        //     unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
-        //     {
-        //         IssueId = issue.Id,
-        //         Status = status,
-        //         ChangedById = null,
-        //         Note = $"Issue {status} by system"
-        //     });
-        // }
+            unitOfWork.GetRepository<StatusHistory, Guid>().Add(new StatusHistory
+            {
+                IssueId = issue.Id,
+                Status = status,
+                ChangedById = null,
+                Note = $"Issue {status} by system"
+            });
+        }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using Report.Client.DependencyInjection;
 using Report.Persistence.DependencyInjection;
 using Report.Service.DependencyInjection;
+using ReportService.Middleware;
 
 namespace ReportService
 {
@@ -63,6 +64,9 @@ namespace ReportService
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+            // First, so it wraps authentication, authorization and the controllers.
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseSwagger();
             app.UseSwaggerUI();
 

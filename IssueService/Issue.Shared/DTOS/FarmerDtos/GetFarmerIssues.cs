@@ -21,5 +21,7 @@ namespace Issue.Shared.DTOS.FarmerDtos
         public string ExpertName { get; set; } = null!;
         public string ExpertUrl { get; set; }
         public Guid ExpertId { get; set; }
+        /// <summary>Object key of the photo the farmer reported with (never the repair-proof photo); null when none.</summary>
+        public string? ImageUrl { get; set; }
     }
 }

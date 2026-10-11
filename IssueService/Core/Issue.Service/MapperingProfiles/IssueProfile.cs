@@ -100,6 +100,11 @@ namespace Issue.Service.MapperingProfiles
                  .ForMember(dest => dest.longitude , opt => opt.MapFrom(src => src.GPSLocation.Longitude))
                  .ForMember(dest => dest.Latiude, opt => opt.MapFrom(src => src.GPSLocation.Latitude))
                  .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.IssueAttachments
+                     .Where(a => a.Type == IssueAttachmentType.Photo && a.Purpose == IssueAttachmentPurpose.ProblemReport)
+                     .OrderBy(a => a.CreatedAt)
+                     .Select(a => a.Url)
+                     .FirstOrDefault()))
                  .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
            
 

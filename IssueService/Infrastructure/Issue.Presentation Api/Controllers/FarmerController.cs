@@ -56,14 +56,30 @@ namespace Issue.Presentation_Api.Controllers
             await farmerService.UncompleteIssueAsync(issueId, cancellationToken);
             return NoContent();
         }
-        [HttpGet("{issueId}/tracking")]
+        /// <summary>
+        /// The issue id comes from the route. It used to be read from <c>?IssueID=</c> only, so the
+        /// documented route <c>/Farmer/{id}/tracking</c> always looked up Guid.Empty and threw.
+        /// <c>?IssueID=</c> is still accepted but the route value wins.
+        /// </summary>
+        [HttpGet("{issueId:guid}/tracking")]
         [Authorize]
         [ProducesResponseType(typeof(IssueTrackingResponseDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IssueTrackingResponseDto>> GetIssueTrackingByIssueIdAsync([FromQuery]StatusParams status, CancellationToken cancellationToken)
+        public async Task<ActionResult<IssueTrackingResponseDto>> GetIssueTrackingByIssueIdAsync(
+            Guid issueId, [FromQuery] StatusParams status, CancellationToken cancellationToken)
         {
-            var result = await farmerService.GetIssueTrackingByIssueIdAsync(status, cancellationToken);
-            return Ok(result);
+            status.IssueID = issueId;
+
+            try
+            {
+                var result = await farmerService.GetIssueTrackingByIssueIdAsync(status, cancellationToken);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // IssueService has no exception middleware, so this used to be a bare 500.
+                return NotFound(new { status = 404, code = "ISSUE_NOT_FOUND", message = ex.Message });
+            }
         }
     }
 }
