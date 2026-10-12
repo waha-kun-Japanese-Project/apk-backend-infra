@@ -100,7 +100,10 @@ namespace Issue.Service.MapperingProfiles
                  .ForMember(dest => dest.longitude , opt => opt.MapFrom(src => src.GPSLocation.Longitude))
                  .ForMember(dest => dest.Latiude, opt => opt.MapFrom(src => src.GPSLocation.Latitude))
                  .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
-                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status));
+                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                 .ForMember(dest=>dest.imagegurl , opt => opt.MapFrom(src => src.IssueAttachments
+                        .Where(x => x.Purpose == IssueAttachmentPurpose.ProblemReport)
+                        .Select(x => x.Url)));
            
 
             CreateMap<StatusHistory, IssueTrackingStepDto>()

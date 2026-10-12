@@ -18,7 +18,7 @@ namespace Issue.Presentation_Api.Controllers
     public class FarmerController(IFarmerService farmerService): ControllerBase
     {
         [HttpGet("issues")]
-        [Authorize(Roles = "Farmer")]
+        [Authorize]
         
 
         public async Task<IActionResult> GetAllIssuesAsync([FromQuery] IssueFilteration issueFilteration, CancellationToken cancellationToken = default)
@@ -27,7 +27,7 @@ namespace Issue.Presentation_Api.Controllers
             return Ok(issues);
         }
         [HttpGet("issues/{reporterId}")]
-        [Authorize(Roles = "Farmer")]
+        [Authorize]
         
 
         public async Task<IActionResult> GetAllIssuesByReporterIdAsync([FromQuery] IssueFilteration issueFilteration,CancellationToken cancellationToken = default)
