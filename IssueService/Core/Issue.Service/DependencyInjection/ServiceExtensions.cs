@@ -10,6 +10,7 @@ using Issue.ServiceAbstraction.Jop;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Hangfire.SqlServer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,11 @@ using System.Threading.Tasks;
 
 namespace Issue.Service.DependencyInjection
 {
-    public static   class ServiceExtensions
+    public static class ServiceExtensions
     {
-        public static  IServiceCollection AddServiced(this IServiceCollection services,IConfiguration configuration)
-        
-            {
+        public static IServiceCollection AddServiced(this IServiceCollection services, IConfiguration configuration)
+
+        {
             services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MapperingProfiles.IssueProfile).Assembly));
             services.AddScoped<IExpertAssignmentJob, ExpertAssignmentJob>();
             services.AddScoped<IExpertService, ExpertService>();
@@ -41,17 +42,24 @@ namespace Issue.Service.DependencyInjection
                 });
             });
 
-            services.AddHangfire(config =>
-            {
-                config.UseSqlServerStorage(
-                    configuration.GetConnectionString(
-                        "HangfireConnection"));
-            });
+            services.AddHangfire(config => config
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(
+                    configuration.GetConnectionString("HangfireConnection"),
+                    new SqlServerStorageOptions
+                    {
+                        SchemaName = "IssueHangfire",          // isolated from ReportService
+                        PrepareSchemaIfNecessary = true,
+                        QueuePollInterval = TimeSpan.Zero,
+                        UseRecommendedIsolationLevel = true,
+                        DisableGlobalLocks = true
+                    }));
+            services.AddHangfireServer();
 
-           services.AddHangfireServer();
 
 
-       
 
 
             return services;

@@ -1,4 +1,4 @@
-﻿using Issue.Domain.Contract;
+using Issue.Domain.Contract;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace Issue.Persistence.Repository
 
             //where filter 
 
-            if (specification is not null)
+            if (specification.Criteria is not null)
             {
                 query = query.Where(specification.Criteria);
             }

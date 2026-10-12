@@ -12,7 +12,7 @@ namespace Issue.Persistence.Context.Configuration
             builder.Property(sh => sh.Status).IsRequired();
             builder.Property(sh => sh.Note).HasMaxLength(2000);
             builder.Property(sh => sh.ChangedAt).IsRequired();
-            builder.Property(sh => sh.ChangedById).IsRequired();
+            builder.Property(sh => sh.ChangedById).IsRequired(false);
         }
     }
 }

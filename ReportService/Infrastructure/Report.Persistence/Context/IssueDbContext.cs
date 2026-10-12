@@ -10,6 +10,9 @@ namespace Report.Persistence.Context
         public DbSet<GPSLocation> GPSLocations { get; set; } = null!;
         public DbSet<AiAnalysis> AiAnalyses { get; set; } = null!;
         public DbSet<IssueAttachment> IssueAttachments { get; set; } = null!;
+        public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
+
+        public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
