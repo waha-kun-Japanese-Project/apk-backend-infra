@@ -94,15 +94,6 @@ namespace Issue.Service.Services
                     dto.ExpertUrl = user.PhotoUrl!;
                 }
             }
-            //var Farmers = await userGrpcClient.GetUsersByIdsAsync(usersIdS, cancellationToken);
-            //foreach (var dtos in result)
-            //{
-            //    if (users.TryGetValue(dtos.ReporterId, out var farmer))
-            //    {
-            //        dtos.userName = farmer.Name;
-            //        dtos.userPhoto = farmer.PhotoUrl!;
-            //    }
-            //}
             return result;
         }
 

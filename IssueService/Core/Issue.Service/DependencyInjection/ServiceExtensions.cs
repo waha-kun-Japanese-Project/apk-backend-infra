@@ -30,7 +30,8 @@ namespace Issue.Service.DependencyInjection
             services.AddScoped<IFarmerService, FarmerService>();
             services.AddScoped<IAssignExpertServices, AssignExpertServices>();
             services.AddScoped<IConsumer<IssueCreatedEvent>, IssueCreatedConsumer>();
-            services.AddScoped<ExpertAssignmentReconciliationJob>();
+            services.AddScoped< ExpertAssignmentReconciliationJob>();
+            services.AddScoped<IFarmerService, FarmerService>();
 
             services.AddMassTransit(x =>
             {

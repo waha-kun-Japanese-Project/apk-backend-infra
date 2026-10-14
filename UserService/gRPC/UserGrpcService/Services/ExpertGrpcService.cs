@@ -67,7 +67,7 @@ public class ExpertGrpcService : ExpertService.ExpertServiceBase
             select new ExpertResponse
             {
                 Id = user.Id.ToString(),
-                Name = user.UserName,
+                Name = user.FullName,
                 PhotoUrl = user.pictures ?? string.Empty
             }
         )
