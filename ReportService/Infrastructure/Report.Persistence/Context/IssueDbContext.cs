@@ -12,7 +12,6 @@ namespace Report.Persistence.Context
         public DbSet<IssueAttachment> IssueAttachments { get; set; } = null!;
         public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
 
-        public DbSet<StatusHistory> StatusHistories { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
