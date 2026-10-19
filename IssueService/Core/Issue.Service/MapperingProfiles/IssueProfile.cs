@@ -23,8 +23,10 @@ namespace Issue.Service.MapperingProfiles
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.ReporterId))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.IssueAttachments.Select(x => x.Url)))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.IssueAttachments
+                        .Where(x => x.Purpose == IssueAttachmentPurpose.ProblemReport)
+                        .Select(x => x.Url)
+                        .FirstOrDefault())).ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
 
             CreateMap<Issue.Domain.Entities.Issue.Issue, AssignExpertResponse>()
                 .ForMember(
@@ -102,9 +104,10 @@ namespace Issue.Service.MapperingProfiles
                  .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
                  .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                  .ForMember(dest=> dest.ExpertId , opt => opt.MapFrom(src => src.AssignedExpertId))
-                 .ForMember(dest=>dest.imagegurl , opt => opt.MapFrom(src => src.IssueAttachments
+                 .ForMember(dest=>dest.imageurl , opt => opt.MapFrom(src => src.IssueAttachments
                         .Where(x => x.Purpose == IssueAttachmentPurpose.ProblemReport)
-                        .Select(x => x.Url)));
+                        .Select(x=>x.Url)
+                        .FirstOrDefault()));
            
 
             CreateMap<StatusHistory, IssueTrackingStepDto>()
@@ -121,11 +124,12 @@ namespace Issue.Service.MapperingProfiles
                     dest => dest.Name,
                     opt => opt.MapFrom(src => GetStatusName(src.Status).ToString()));
 
-            CreateMap<StatusHistory,CompleteStausReponse>()
+            CreateMap<Issue.Domain.Entities.Issue.Issue, CompleteStausReponse>()
                 .ForMember(dest => dest.status, opt => opt.MapFrom(src => src.Status))
-                .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.IssueId))
-                .ForMember(dest => dest.ChangedAt , opt => opt.MapFrom(src => src.ChangedAt))
-                .ForMember(dest => dest.ReporterId , opt=> opt.MapFrom(src=>src.ChangedById));
+                .ForMember(dest => dest.IssueId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.ReporterId, opt => opt.MapFrom(src => src.ReporterId))
+                .ForMember(dest => dest.ChangedAt, opt => opt.MapFrom(src => src.StatusHistory.Select(x => x.ChangedAt).FirstOrDefault().ToString()));
+                
 
 
 

@@ -3,8 +3,10 @@ using Grpc.Core;
 using Issue.Client.ServiceAbstraction;
 using Issue.Domain.Contract;
 using Issue.Domain.Entities.Issue;
+using Issue.Service.Specifications.ExpertSpecifications;
 using Issue.Service.Specifications.FarmerSpecifications;
 using Issue.Shared.DTOS.FarmerDtos;
+using Issue.Shared.DTOS.Query;
 using MassTransit.Initializers;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -15,6 +17,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using GetFarmerIssues = Issue.Shared.DTOS.FarmerDtos.GetFarmerIssues;
 
 namespace Issue.Service.Services
@@ -26,7 +29,7 @@ namespace Issue.Service.Services
         IMapper mapper)
         : Issue.ServiceAbstraction.Farmer.IFarmerService
     {
-        public async Task<IEnumerable<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>> GetAllIssuesAsync(IssueFilteration issueFilteration, CancellationToken cancellationToken = default)
+        public async Task<PaginatedResult<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>> GetAllIssuesAsync(IssueFilteration issueFilteration, CancellationToken cancellationToken = default)
         {
             var repo = unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
             var CommentRepo = unitOfWork.GetRepository<Comment, Guid>();
@@ -63,11 +66,17 @@ namespace Issue.Service.Services
                 dto.ShareCount = ShareCounts.GetValueOrDefault(dto.IssueId);
             }
 
-            return result;
+            var pageCount = (int)Math.Ceiling((double)result.Count() / issueFilteration.PageSize);
+            var totalCount = await repo.CountAsync(
+                new GetAllIssues(issueFilteration),
+                cancellationToken);
+
+            return new(issueFilteration.pageIndex, pageCount, totalCount, result);
+
 
         }
 
-        public async Task<IEnumerable<GetFarmerIssues>> GetAllIssuesByReporterIdAsync(IssueFilteration IssueParams ,CancellationToken cancellationToken = default)
+        public async Task<PaginatedResult<GetFarmerIssues>> GetAllIssuesByReporterIdAsync(IssueFilteration IssueParams ,CancellationToken cancellationToken = default)
         {
             var userId = GetLoggedInUserId();
             //if (userId != reportedId)
@@ -94,7 +103,12 @@ namespace Issue.Service.Services
                     dto.ExpertUrl = user.PhotoUrl!;
                 }
             }
-            return result;
+            var pageCount = (int)Math.Ceiling((double)result.Count() / IssueParams.PageSize);
+            var totalCount = await repo.CountAsync(
+                new GetFarmerIssuesSpecs(IssueParams, userId),
+                cancellationToken);
+
+            return new(IssueParams.pageIndex,pageCount,totalCount,result);
         }
 
         public async Task<CompleteStausReponse> GetCompleteStatusByIssueIdAsync(Guid IssueId, CancellationToken cancellationToken = default)
@@ -110,7 +124,7 @@ namespace Issue.Service.Services
             //if (latest is null)
             //    throw new KeyNotFoundException("No status history found for this issue.");
 
-            if (issue.Status != IssueStatus.Repaired)
+            if (issue.Status != IssueStatus.Repaired )
                 throw new InvalidOperationException("Only repaired issues can be completed.");
 
             ChangeStatus(issue, IssueStatus.completed);   // must return the new StatusHistory
@@ -188,7 +202,7 @@ namespace Issue.Service.Services
         }
 
 
-        public async Task UncompleteIssueAsync(Guid issueId, CancellationToken cancellationToken = default)
+        public async Task<CompleteStausReponse> UncompleteIssueAsync(Guid issueId, CancellationToken cancellationToken = default)
         {
             var issueRepo = unitOfWork.GetRepository<Issue.Domain.Entities.Issue.Issue, Guid>();
 
@@ -196,12 +210,17 @@ namespace Issue.Service.Services
             if (issue is null)
                 throw new KeyNotFoundException("Issue not found.");
 
-            if (issue.Status != IssueStatus.Repaired)
-                throw new InvalidOperationException("Only completed issues can be marked as uncompleted.");
+            if (issue.Status != IssueStatus.Repaired )
+                throw new InvalidOperationException("Only repaired issues can be marked as uncompleted.");
 
-            await UncompleteStatusAsync(issue, cancellationToken);
+            //await UncompleteStatusAsync(issue, cancellationToken);
 
-            await unitOfWork.SaveChangesAsync(cancellationToken);   // one save for the issue and the deleted rows
+            //await unitOfWork.SaveChangesAsync(cancellationToken);   // one save for the issue and the deleted rows
+            await UncompleteStatusAsync(issue, IssueStatus.Scheduled,cancellationToken);   // must return the new StatusHistory
+            issue.Status = IssueStatus.Scheduled;
+            issueRepo.Update(issue);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            return mapper.Map<CompleteStausReponse>(issue);
         }
 
         private Guid GetLoggedInUserId()
@@ -258,6 +277,7 @@ namespace Issue.Service.Services
         }
         private async Task UncompleteStatusAsync(
             Issue.Domain.Entities.Issue.Issue issue,
+            IssueStatus status,
             CancellationToken cancellationToken)
         {
             var historyRepo = unitOfWork.GetRepository<StatusHistory, Guid>();
@@ -270,7 +290,7 @@ namespace Issue.Service.Services
             foreach (var entry in toRemove)
                 historyRepo.Remove(entry);
 
-            issue.Status = IssueStatus.Scheduled;
+            issue.Status = status;
         }
         private static TrackingStepState GetStepState(
             IssueStatus stepStatus,
