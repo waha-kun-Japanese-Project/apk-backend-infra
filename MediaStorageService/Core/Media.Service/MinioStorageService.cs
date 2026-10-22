@@ -95,6 +95,7 @@ namespace Media.Service
                         .WithBucket(settings.BucketName)
                         .WithObject(objectName)
                         .WithStreamData(uploadStreamRequest.Stream)
+                        .WithObjectSize(uploadStreamRequest.Stream.Length)
                         .WithContentType(uploadStreamRequest.contentType),
                     cancellationToken);
 
