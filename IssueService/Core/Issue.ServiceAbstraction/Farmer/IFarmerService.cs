@@ -1,4 +1,5 @@
 ﻿using Issue.Shared.DTOS.FarmerDtos;
+using Issue.Shared.DTOS.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Issue.ServiceAbstraction.Farmer
 {
     public interface IFarmerService
     {
-        Task<IEnumerable<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>>
+        Task<PaginatedResult<Shared.DTOS.FarmerDtos.GetIssuesREsponseDto>>
             GetAllIssuesAsync(IssueFilteration issueFilteration,CancellationToken cancellationToken = default);
          
-        Task<IEnumerable<GetFarmerIssues>>
+        Task<PaginatedResult<GetFarmerIssues>>
             GetAllIssuesByReporterIdAsync(IssueFilteration issueFilteration ,CancellationToken cancellationToken = default);
         Task<IssueTrackingResponseDto> GetIssueTrackingByIssueIdAsync(StatusParams status, CancellationToken cancellationToken = default);
         Task<CompleteStausReponse> GetCompleteStatusByIssueIdAsync(Guid IssueId, CancellationToken cancellationToken = default);
-        Task UncompleteIssueAsync(Guid issueId, CancellationToken cancellationToken = default);
+        Task<CompleteStausReponse> UncompleteIssueAsync(Guid issueId, CancellationToken cancellationToken = default);
     }
 }
