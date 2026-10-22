@@ -104,7 +104,7 @@ namespace Issue.Service.MapperingProfiles
                  .ForMember(dest=>dest.priority,opt=> opt.MapFrom(src => src.Priority))
                  .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                  .ForMember(dest=> dest.ExpertId , opt => opt.MapFrom(src => src.AssignedExpertId))
-                 .ForMember(dest=>dest.imageurl , opt => opt.MapFrom(src => src.IssueAttachments
+                 .ForMember(dest=>dest.ImageUrl , opt => opt.MapFrom(src => src.IssueAttachments
                         .Where(x => x.Purpose == IssueAttachmentPurpose.ProblemReport)
                         .Select(x=>x.Url)
                         .FirstOrDefault()));
