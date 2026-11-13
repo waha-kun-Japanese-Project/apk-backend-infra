@@ -18,7 +18,7 @@ namespace Issue.Shared.DTOS.FarmerDtos
         public string longitude { get; set; }
         public string Latiude { get; set; }
         public Guid ReporterId { get; set; }
-        public string imageurl { get; set; }
+        
         public string ExpertName { get; set; } = null!;
         public string ExpertUrl { get; set; }
         public Guid ExpertId { get; set; }
